@@ -1,0 +1,192 @@
+#!/usr/bin/env python3
+"""SCP a file to N free TP machines and run it."""
+
+from __future__ import annotations
+
+import argparse
+import subprocess
+import sys
+import time
+from pathlib import Path
+from machines import MachineState
+from multiprocessing import Process
+from log_commands import load_config, save_config, log_execution
+
+REMOTE_PATH = "~/4sl07/deploy/"
+CMD_TIMEOUT = 15  # seconds
+
+def run_process(cmd: list[str]):
+    try:
+        subprocess.run(cmd, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Command failed (exit {e.returncode})", file=sys.stderr)
+
+def run_command_batch(cmd: list[str], user: str, hosts: list[str]):
+    '''
+    Run a command on multiple hosts in parallel using multiprocessing.
+    The executed command is `cmd user@host cmd_args...`.
+    '''
+    processes: list[tuple[str, Process]] = []
+    for host in hosts:
+        command = [c.format(host=host, user=user) for c in cmd]
+        process = Process(target=run_process, args=(command,))
+        process.start()
+        processes.append((host, process))
+    
+    start_time = time.time()
+    for host, process in processes:
+        process.join(timeout=max(0, CMD_TIMEOUT - (time.time() - start_time)))
+        if process.is_alive():
+            print(f"[{host}] Command is still running after {CMD_TIMEOUT} seconds, killing it to avoid a blocking situation...")
+            process.terminate()
+            process.join()
+
+def run_command(cmd: list[str]):
+    process = Process(target=subprocess.run, args=(cmd,), kwargs={"check": True})
+    process.start()
+    process.join(timeout=10)
+    if process.is_alive():
+        print(f"Command is still running after 10 seconds, killing it to avoid overloading the machines...")
+        process.terminate()
+        process.join()
+    
+
+def kill_previous_sessions(user: str, should_wait: bool) -> None:
+    with open("deployed_hosts.txt", "a+") as f:
+        f.seek(0)
+        hosts = [line.strip() for line in f if line.strip()]
+        batch_size = 5
+        for i in range(0, len(hosts), batch_size):
+            batch_hosts = hosts[i:min(i+batch_size, len(hosts))]
+            print(f"Killing sessions on hosts: {', '.join(batch_hosts)} ({i+1} / {len(hosts)})...")
+            run_command_batch(["ssh", "{user}@{host}", "tmux kill-session -t 4sl07-{user} & rm -rf /tmp/4sl07_grp3"], user, batch_hosts)
+            time.sleep(1)
+        print("Previous sessions killed. Waiting 30s for machines to be freed...")
+        if should_wait and len(hosts) > 0:
+            time.sleep(30)
+
+def scp(user: str, host: str, file: Path) -> None:
+    try:
+        run_command(["ssh", f"{user}@{host}", f"mkdir -p {REMOTE_PATH}"])
+        run_command(["scp", str(file), f"{user}@{host}:{REMOTE_PATH}"])
+    except subprocess.CalledProcessError as e:
+        print(f"[{host}] scp failed (exit {e.returncode})", file=sys.stderr)
+        raise
+
+
+def ssh_run(user: str, hosts: list[str], file: Path, cmd: str | None = None) -> None:
+    command = cmd if cmd else f"{REMOTE_PATH}{file.name}"
+    run_command_batch(["ssh", "{user}@{host}", f"chmod +x {REMOTE_PATH}{file.name} & tmux new -A -s 4sl07-{user} -d '{command}'"], user, hosts)
+
+
+def main() -> int:
+    saved_prefs = load_config()
+    parser = argparse.ArgumentParser(description="Deploy a file to free TP machines")
+
+    parser.add_argument("file", type=Path, nargs="?", 
+                        default=saved_prefs.get("file"), 
+                        help="File to deploy")
+
+    parser.add_argument("--user", type=str,
+                        default=saved_prefs.get("user"), 
+                        help="SSH username")
+
+    parser.add_argument("--count", type=int, 
+                        default=saved_prefs.get("count", 4), 
+                        help="Number of machines")
+
+    parser.add_argument("--cmd", type=str, 
+                        default=saved_prefs.get("cmd"), 
+                        help="Command to run instead of simply running the file")
+                        
+    parser.add_argument("--kill", action="store_true", 
+                        help="Only kill previous sessions, do not deploy or run anything")
+
+    parser.add_argument("--save", action="store_true", default=True, 
+                        help="Save settings for next time (default: True)")
+    
+    parser.add_argument("--no-save", action="store_false", dest="save")
+    
+    parser.add_argument("--scp-only", action="store_true", 
+                        help="Only scp the file to the first available machine, do not run it")
+    
+    parser.add_argument("--scp", action="store_true", default=True,
+                        help="Whether to scp the file to the machines (default: True)")
+
+    parser.add_argument("--no-scp", action="store_false", dest="scp",
+                        help="Do not scp the file to the machines, assume it is already there")
+
+    parser.add_argument("--append-hosts", action="store_true",
+                        help="Append to deployed_hosts.txt instead of overwriting it")    
+
+    args = parser.parse_args()
+    session_id = log_execution(vars(args), status="running")
+
+    if not args.user:
+        log_execution(vars(args), status="error", session_id=session_id)
+        parser.error("--user is required to do anything (none found in CLI or memory)")
+
+    if args.kill:
+        print("Killing previous sessions...")
+        kill_previous_sessions(args.user, not args.kill)
+        log_execution(vars(args), status="success", session_id=session_id)
+        return 0
+    
+    missing = []
+    if not args.file: missing.append("file (positional)")
+    if not args.user: missing.append("--user")
+    if missing:
+        log_execution(vars(args), status="error", session_id=session_id)
+        parser.error(f"Missing required parameters: {', '.join(missing)}")
+
+    if not args.file.exists():
+        log_execution(vars(args), status="error", session_id=session_id)
+        print(f"File not found: {args.file}", file=sys.stderr)
+        return 1
+
+    if args.save:
+        save_config(vars(args))
+
+    print(f"Deploying using {args}")
+
+    state = MachineState()
+    state.update()
+    hosts = state.available()[: args.count * 2]  # Get more hosts than needed in case some are taken while deploying
+
+    if not hosts:
+        print("No free machines available.", file=sys.stderr)
+        return 1
+
+    if args.scp:
+        print(f"[{hosts[0]}] scp...")
+        scp(args.user, hosts[0], args.file)
+        if args.scp_only:
+            log_execution(vars(args), status="success", session_id=session_id)
+            return 0
+        
+    with open("deployed_hosts.txt", "r") as f:
+        existing_hosts = set(line.strip() for line in f if line.strip())
+        if args.append_hosts:
+            hosts = [host for host in hosts if host not in existing_hosts]
+    hosts = hosts[:args.count]
+
+    mode = "a" if args.append_hosts else "w+"
+    with open("deployed_hosts.txt", mode) as f:
+        batch_size = 5
+        for i in range(0, len(hosts), batch_size):
+            batch_hosts = hosts[i:min(i+batch_size, len(hosts))]
+            for host in batch_hosts:
+                f.write(f"{host}\n")
+            f.flush()
+
+            print(f"Running on hosts: {', '.join(batch_hosts)} ({i+1} / {len(hosts)})...")
+            ssh_run(args.user, batch_hosts, args.file, args.cmd)
+            time.sleep(1)
+
+    log_execution(vars(args), status="success", session_id=session_id)
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

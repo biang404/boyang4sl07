@@ -1,0 +1,14 @@
+/target
+/splits
+/mapdata
+/tests
+**/__pycache__
+**/deployed_hosts.txt
+**/deploy_command.json
+**/deploy_history.jsonl
+*.txt
+*.wet
+/map_data
+/reduce_data
+/data
+/result

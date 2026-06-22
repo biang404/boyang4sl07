@@ -1,0 +1,14 @@
+C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\release\deps\serde-2edc0bc64aa17e33.d: C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\release\build\serde-45ce9a9451367cdc\out/private.rs
+
+C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\release\deps\libserde-2edc0bc64aa17e33.rlib: C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\release\build\serde-45ce9a9451367cdc\out/private.rs
+
+C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\release\deps\libserde-2edc0bc64aa17e33.rmeta: C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\release\build\serde-45ce9a9451367cdc\out/private.rs
+
+C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\lib.rs:
+C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\integer128.rs:
+C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\mod.rs:
+C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\de.rs:
+C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\serde-1.0.228\src\private\ser.rs:
+C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\release\build\serde-45ce9a9451367cdc\out/private.rs:
+
+# env-dep:OUT_DIR=C:\\Users\\22863\\Desktop\\SLR\\4SL07\\4sl07\\4sl07\\kafka_mode\\target\\release\\build\\serde-45ce9a9451367cdc\\out
