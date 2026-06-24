@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 import argparse
+import gzip
 import json
+import shutil
 from collections import Counter
 from pathlib import Path
+from urllib.request import Request, urlopen
 
 
 DELIMITERS = {
@@ -56,18 +59,55 @@ def split_like_rust_mapper(text: str):
         yield text[start:]
 
 
-def count_input_chunks(input_file: Path, map_task_count: int, chunk_size_bytes: int) -> Counter:
-    input_len = input_file.stat().st_size
-    computed_maps = map_task_count if map_task_count > 0 else max(input_len // chunk_size_bytes, 1)
-    counts: Counter = Counter()
-
+def count_file(input_file: Path) -> Counter:
     with input_file.open("rb") as f:
-        for map_id in range(computed_maps):
-            f.seek(map_id * chunk_size_bytes)
-            data = f.read(chunk_size_bytes)
-            text = data.decode("utf-8", errors="replace").translate(ASCII_LOWER_TABLE)
-            counts.update(token for token in split_like_rust_mapper(text) if token)
+        data = f.read()
+    text = data.decode("utf-8", errors="replace").translate(ASCII_LOWER_TABLE)
+    return Counter(token for token in split_like_rust_mapper(text) if token)
 
+
+def manifest_inputs(manifest_path: Path) -> list[tuple[Path, str]]:
+    inputs = []
+    with manifest_path.open(encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            fields = line.split("\t", 1)
+            path = Path(fields[0])
+            url = fields[1] if len(fields) > 1 else ""
+            inputs.append((path, url))
+    if not inputs:
+        raise SystemExit(f"Input manifest is empty: {manifest_path}")
+    return inputs
+
+
+def download_input_file(path: Path, url: str) -> None:
+    if not url:
+        raise SystemExit(f"Input file is missing and manifest has no URL: {path}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    print(f"Downloading missing validation input: {url} -> {path}")
+    req = Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urlopen(req, timeout=60) as response:
+        if url.endswith(".gz"):
+            with gzip.GzipFile(fileobj=response) as gz, path.open("wb") as out:
+                shutil.copyfileobj(gz, out)
+        else:
+            with path.open("wb") as out:
+                shutil.copyfileobj(response, out)
+
+
+def count_manifest_inputs(manifest_path: Path, download_missing_inputs: bool) -> Counter:
+    counts: Counter = Counter()
+    inputs = manifest_inputs(manifest_path)
+    for index, (input_file, input_url) in enumerate(inputs, start=1):
+        if not input_file.exists():
+            if download_missing_inputs:
+                download_input_file(input_file, input_url)
+            else:
+                raise SystemExit(f"Input file is missing: {input_file}")
+        print(f"Counting manifest input {index}/{len(inputs)}: {input_file}")
+        counts.update(count_file(input_file))
     return counts
 
 
@@ -106,46 +146,39 @@ def main() -> int:
         description="Validate kafka_mode reduce results by recomputing the expected counts from input chunks."
     )
     parser.add_argument("--input-file", type=Path, help="Input WET file used by the coordinator")
+    parser.add_argument("--input-manifest", type=Path, help="Manifest containing WET input files used by the coordinator")
     parser.add_argument("--result-dir", type=Path, help="Directory containing reduce_*_<job_id>.json files")
     parser.add_argument("--job-id", default=None)
-    parser.add_argument("--map-task-count", type=int, default=None)
-    parser.add_argument("--chunk-size-bytes", type=int, default=None)
     parser.add_argument("--reduce-count", type=int, default=None)
     parser.add_argument("--state-file", type=Path, default=Path("scripts/deployed_state.json"))
     parser.add_argument("--deploy-command", type=Path, default=Path("scripts/deploy_command.json"))
     parser.add_argument("--sample-limit", type=int, default=20)
+    parser.add_argument("--no-download-missing-inputs", action="store_false", dest="download_missing_inputs")
     args = parser.parse_args()
 
     state = load_json_file(args.state_file)
     deploy_command = load_json_file(args.deploy_command)
 
-    input_file = args.input_file or (Path(state["input_file"]) if "input_file" in state else None)
+    input_manifest = args.input_manifest or (Path(state["input_manifest"]) if state.get("input_manifest") else None)
+    input_file = args.input_file or (Path(state["input_file"]) if state.get("input_file") else None)
     result_dir = args.result_dir or (Path(state["result_dir"]) if "result_dir" in state else None)
     job_id = args.job_id or state.get("job_id") or deploy_command.get("job_id")
-    map_task_count = args.map_task_count
-    if map_task_count is None:
-        map_task_count = deploy_command.get("map_task_count")
-    chunk_size_bytes = args.chunk_size_bytes
-    if chunk_size_bytes is None:
-        chunk_size_bytes = deploy_command.get("chunk_size_bytes")
     reduce_count = args.reduce_count
     if reduce_count is None:
         reduce_count = deploy_command.get("reduce_count")
 
-    if input_file is None:
-        raise SystemExit("Missing --input-file and no input_file found in deployed_state.json")
+    if input_file is None and input_manifest is None:
+        raise SystemExit("Missing --input-file/--input-manifest and no input path found in deployed_state.json")
     if result_dir is None:
         raise SystemExit("Missing --result-dir and no result_dir found in deployed_state.json")
-    if map_task_count is None:
-        raise SystemExit("Missing --map-task-count and no map_task_count found in deploy_command.json")
-    if chunk_size_bytes is None:
-        raise SystemExit("Missing --chunk-size-bytes and no chunk_size_bytes found in deploy_command.json")
-
-    print(f"Input: {input_file}")
+    if input_manifest is not None:
+        print(f"Input manifest: {input_manifest}")
+    else:
+        print(f"Input: {input_file}")
     print(f"Results: {result_dir}")
-    print(f"job_id={job_id} map_task_count={map_task_count} chunk_size_bytes={chunk_size_bytes} reduce_count={reduce_count}")
+    print(f"job_id={job_id} reduce_count={reduce_count}")
 
-    expected = count_input_chunks(input_file, map_task_count, chunk_size_bytes)
+    expected = count_manifest_inputs(input_manifest, args.download_missing_inputs) if input_manifest is not None else count_file(input_file)
     actual = load_result_counts(result_dir, job_id, reduce_count)
 
     print(f"Expected unique tokens: {len(expected)}")

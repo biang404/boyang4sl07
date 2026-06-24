@@ -2,6 +2,7 @@
 import argparse
 import gzip
 import json
+import tempfile
 import sys
 import subprocess
 import time
@@ -112,13 +113,15 @@ def scp_dir(local_dir: str, user: str, host: str, remote_parent: str) -> None:
     run(["scp"] + SCP_OPTS + ["-r", local_dir, f"{user}@{host}:{remote_parent}"])
 
 
-def host_ready(user: str, host: str, remote_dir: str, local_binary: str) -> bool:
+def host_ready(user: str, host: str, remote_dir: str, local_binary: str, quiet: bool = False) -> bool:
     try:
         ssh(user, host, f"mkdir -p {remote_dir} && echo ok")
         scp(local_binary, user, host, f"{remote_dir}/kafka_mode")
         ssh(user, host, f"chmod +x {remote_dir}/kafka_mode")
         return True
     except subprocess.CalledProcessError as exc:
+        if quiet:
+            return False
         err = (exc.stderr or "").strip()
         if err:
             print(f"[{host}] rejected during setup: {err}")
@@ -146,11 +149,17 @@ def choose_ready_hosts(
     else:
         ready_hosts = []
 
+    rejected_count = 0
     for host in remaining:
         if len(ready_hosts) >= required:
             break
-        if host_ready(user, host, remote_dir, local_binary):
+        if host_ready(user, host, remote_dir, local_binary, quiet=True):
             ready_hosts.append(host)
+        else:
+            rejected_count += 1
+
+    if rejected_count:
+        print(f"Skipped {rejected_count} unreachable or unauthorized TP machine(s) during setup.")
 
     if len(ready_hosts) < required:
         raise SystemExit(
@@ -197,6 +206,40 @@ def prepare_remote_input(
             except subprocess.CalledProcessError as e:
                 print(f"Warning: download failed on a host, stderr: {e.stderr}")
                 raise
+
+
+def write_remote_manifest(
+    user: str,
+    hosts: list[str],
+    tmp_dir: str,
+    job_id: str,
+    selected_links: list[str],
+) -> str:
+    manifest_path = f"{tmp_dir}/data/input_manifest.txt"
+    lines = []
+    for index, link in enumerate(selected_links):
+        output_name = f"CC-MAIN-{job_id}-{index:04d}.warc.wet"
+        remote_path = f"{tmp_dir}/data/{output_name}"
+        remote_url = f"https://data.commoncrawl.org/{link}"
+        lines.append(f"{remote_path}\t{remote_url}")
+    content = "\n".join(lines) + "\n"
+
+    with tempfile.NamedTemporaryFile("w", delete=False, encoding="utf-8") as tmp:
+        tmp.write(content)
+        local_manifest = Path(tmp.name)
+
+    try:
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            jobs = []
+            for host in hosts:
+                ssh(user, host, f"mkdir -p {tmp_dir}/data")
+                jobs.append(pool.submit(scp, str(local_manifest), user, host, manifest_path))
+            for job in as_completed(jobs):
+                job.result()
+    finally:
+        local_manifest.unlink(missing_ok=True)
+
+    return manifest_path
 
 
 def parse_bootstrap_server(bootstrap_servers: str) -> tuple[str, int]:
@@ -439,6 +482,12 @@ def main() -> int:
         default=saved.get("wet_link_index", 0),
         help="0 selects most recent path from wet.paths, 1 second most recent, etc.",
     )
+    parser.add_argument(
+        "--wet-file-count",
+        type=int,
+        default=saved.get("wet_file_count", 1),
+        help="Number of CommonCrawl WET files to process. 1 keeps the legacy single-file chunk mode.",
+    )
     parser.add_argument("--tmp-dir", default=saved.get("tmp_dir", "/tmp/kafka_mode"))
     parser.add_argument("--local-binary", default=saved.get("local_binary", "./target/release/kafka_mode"))
     parser.add_argument(
@@ -476,6 +525,7 @@ def main() -> int:
                 "chunk_size_bytes": args.chunk_size_bytes,
                 "reduce_count": args.reduce_count,
                 "wet_link_index": args.wet_link_index,
+                "wet_file_count": args.wet_file_count,
                 "tmp_dir": args.tmp_dir,
                 "local_binary": args.local_binary,
                 "kafka_home_hint": args.kafka_home_hint,
@@ -579,17 +629,27 @@ def main() -> int:
         raise SystemExit("Could not fetch CommonCrawl wet.paths list")
     if args.wet_link_index < 0 or args.wet_link_index >= len(links):
         raise SystemExit(f"wet-link-index out of range: {args.wet_link_index}")
-    selected_link = links[-1 - args.wet_link_index]
-    output_name = f"CC-MAIN-{args.job_id}.warc.wet"
+    if args.wet_file_count <= 0:
+        raise SystemExit(f"wet-file-count must be greater than 0: {args.wet_file_count}")
+    start = len(links) - 1 - args.wet_link_index
+    end = start - args.wet_file_count
+    if end < -1:
+        raise SystemExit(
+            f"wet-file-count out of range: requested {args.wet_file_count} from index {args.wet_link_index}, "
+            f"but only {start + 1} link(s) are available"
+        )
+    selected_links = links[end + 1:start + 1]
+    selected_links.reverse()
     remote_binary = f"{args.tmp_dir}/kafka_mode"
+    input_file_arg = ""
 
-    print(f"Downloading input file on {len(all_hosts)} hosts (this can take a few minutes)...")
-    print(f"  URL: https://data.commoncrawl.org/{selected_link}")
-    print(f"  Remote path: {args.tmp_dir}/data/{output_name}")
-    prepare_remote_input(args.user, all_hosts, args.tmp_dir, selected_link, output_name)
-    print("Download complete.")
+    print(f"Preparing manifest for {args.wet_file_count} WET file(s)...")
+    print("  Workers will download assigned WET files lazily during map tasks.")
+    manifest_path = write_remote_manifest(args.user, all_hosts, args.tmp_dir, args.job_id, selected_links)
+    print(f"Manifest written to: {manifest_path}")
 
     coordinator_session = session_name("coordinator", args.job_id)
+    coordinator_input_args = f"--input-manifest {manifest_path} "
     coord_cmd = (
         f"mkdir -p {args.tmp_dir}; "
         f"tmux kill-session -t {coordinator_session} 2>/dev/null || true; "
@@ -602,7 +662,7 @@ def main() -> int:
         f"--chunk-size-bytes {args.chunk_size_bytes} "
         f"--reduce-count {args.reduce_count} "
         f"--version DefaultWithLanguageSplit "
-        f"--input-file {args.tmp_dir}/data/{output_name} "
+        f"{coordinator_input_args}"
         f"--result-dir {args.tmp_dir}/result "
         f"--work-dir {args.tmp_dir} "
         f"2>&1 | tee {args.tmp_dir}/coordinator.log\""
@@ -658,13 +718,14 @@ def main() -> int:
             "broker_kafka_home": broker_kafka_home,
             "coordinator_session": coordinator_session,
             "worker_session": session_name("worker", args.job_id),
-            "input_file": f"{args.tmp_dir}/data/{output_name}",
+            "input_file": input_file_arg,
+            "input_manifest": manifest_path,
             "result_dir": f"{args.tmp_dir}/result",
         }
     )
     print(f"Deployment launched.")
     print(f"Work directory on all hosts: {args.tmp_dir}")
-    print(f"Input file: {args.tmp_dir}/data/{output_name}")
+    print(f"Input manifest: {manifest_path}")
     print(f"Logs: {args.tmp_dir}/*.log")
     print(f"Results: {args.tmp_dir}/result/")
     if broker_host:

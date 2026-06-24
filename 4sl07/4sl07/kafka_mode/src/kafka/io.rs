@@ -56,6 +56,27 @@ pub async fn send_json<T: Serialize>(
     Ok(())
 }
 
+pub async fn send_json_to_partition<T: Serialize>(
+    producer: &FutureProducer,
+    topic: &str,
+    key: &str,
+    partition: i32,
+    value: &T,
+) -> Result<()> {
+    let payload = serde_json::to_string(value)?;
+    let _ = producer
+        .send(
+            FutureRecord::to(topic)
+                .key(key)
+                .partition(partition)
+                .payload(&payload),
+            Duration::from_secs(10),
+        )
+        .await
+        .map_err(|(e, _)| e)?;
+    Ok(())
+}
+
 pub async fn send_binary<T: Serialize>(
     producer: &FutureProducer,
     topic: &str,
@@ -66,6 +87,27 @@ pub async fn send_binary<T: Serialize>(
     let _ = producer
         .send(
             FutureRecord::to(topic).key(key).payload(&payload),
+            Duration::from_secs(10),
+        )
+        .await
+        .map_err(|(e, _)| e)?;
+    Ok(())
+}
+
+pub async fn send_binary_to_partition<T: Serialize>(
+    producer: &FutureProducer,
+    topic: &str,
+    key: &str,
+    partition: i32,
+    value: &T,
+) -> Result<()> {
+    let payload = bincode::serialize(value)?;
+    let _ = producer
+        .send(
+            FutureRecord::to(topic)
+                .key(key)
+                .partition(partition)
+                .payload(&payload),
             Duration::from_secs(10),
         )
         .await

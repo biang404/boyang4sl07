@@ -13,8 +13,7 @@ pub struct MapTask {
     pub job_id: String,
     pub map_id: usize,
     pub input_file: String,
-    pub offset: u64,
-    pub chunk_size_bytes: usize,
+    pub input_url: String,
     pub reduce_count: usize,
     pub version: String,
     /// FQDN of the coordinator machine.

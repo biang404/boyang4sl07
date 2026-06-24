@@ -1,20 +1,14 @@
 use rustc_hash::FxHashMap;
 use std::io::Read;
 
-pub fn map_chunk_from_file(
-    path: &str,
-    offset: u64,
-    chunk_size_bytes: usize,
-) -> std::io::Result<FxHashMap<String, u32>> {
+pub fn map_file(path: &str) -> std::io::Result<FxHashMap<String, u32>> {
     let mut file = std::fs::File::open(path)?;
-    use std::io::Seek;
-    use std::io::SeekFrom;
-    file.seek(SeekFrom::Start(offset))?;
+    let mut buf = Vec::new();
+    file.read_to_end(&mut buf)?;
+    map_bytes(buf)
+}
 
-    let mut buf = vec![0_u8; chunk_size_bytes];
-    let read_len = file.read(&mut buf)?;
-    buf.truncate(read_len);
-
+fn map_bytes(mut buf: Vec<u8>) -> std::io::Result<FxHashMap<String, u32>> {
     let mut text = String::from_utf8_lossy(&buf).to_string();
     text.make_ascii_lowercase();
 

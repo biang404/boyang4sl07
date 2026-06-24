@@ -20,6 +20,10 @@ pub struct RunConfig {
     pub result_dir: String,
     #[arg(long, default_value = "./data/CC-MAIN-0001.wet")]
     pub input_file: String,
+    #[arg(long, default_value = "")]
+    pub input_url: String,
+    #[arg(long, default_value = "")]
+    pub input_manifest: String,
     #[arg(long, default_value = "/tmp/kafka_mode")]
     pub work_dir: String,
 }

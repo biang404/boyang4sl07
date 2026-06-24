@@ -1,5 +1,5 @@
 use crate::config::{RunConfig, TopicNames};
-use crate::core::map::{map_chunk_from_file, partition_map};
+use crate::core::map::{map_file, partition_map};
 use crate::core::reduce::{map_to_sorted_vec, reduce_entries};
 use crate::kafka::io::{
     commit_message, create_consumer, create_producer, recv_binary, recv_json, send_binary,
@@ -10,6 +10,7 @@ use crate::messages::{
     WorkerRegistration,
 };
 use anyhow::Result;
+use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
 use uuid::Uuid;
 
@@ -75,17 +76,25 @@ async fn handle_map_task(
     worker_id: &str,
     task: MapTask,
 ) -> Result<()> {
-    let mapped = map_chunk_from_file(&task.input_file, task.offset, task.chunk_size_bytes)?;
+    let downloaded_input = prepare_input_file(&task)?;
+    let result = handle_prepared_map_task(producer, topics, worker_id, &task).await;
+    if downloaded_input {
+        remove_input_file(&task.input_file);
+    }
+    result
+}
+
+async fn handle_prepared_map_task(
+    producer: &rdkafka::producer::FutureProducer,
+    topics: &TopicNames,
+    worker_id: &str,
+    task: &MapTask,
+) -> Result<()> {
+    let mapped = map_file(&task.input_file)?;
     let mut partitions = partition_map(mapped, task.reduce_count);
 
     for (reduce_id, entries) in partitions.drain(..).enumerate() {
         let entry_count = entries.len();
-
-        println!(
-            "[debug][map] map_id={} reduce_id={} entries={} transfer=bincode-kafka",
-            task.map_id, reduce_id, entry_count
-        );
-
         let payload = MapPartitionPayload {
             job_id: task.job_id.clone(),
             worker_id: worker_id.to_string(),
@@ -94,6 +103,11 @@ async fn handle_map_task(
             entry_count,
             entries,
         };
+        let payload_bytes = bincode::serialized_size(&payload).unwrap_or(0);
+        println!(
+            "[debug][map] map_id={} reduce_id={} entries={} payload_bytes={} transfer=bincode-kafka",
+            task.map_id, reduce_id, entry_count, payload_bytes
+        );
         send_binary(
             producer,
             &topics.map_results,
@@ -108,7 +122,7 @@ async fn handle_map_task(
         &topics.task_acks,
         &format!("ack-map-{}", task.map_id),
         &TaskAck {
-            job_id: task.job_id,
+            job_id: task.job_id.clone(),
             worker_id: worker_id.to_string(),
             phase: TaskPhase::Map,
             task_id: task.map_id,
@@ -118,6 +132,60 @@ async fn handle_map_task(
     .await?;
 
     Ok(())
+}
+
+fn prepare_input_file(task: &MapTask) -> Result<bool> {
+    if task.input_url.is_empty() || std::path::Path::new(&task.input_file).exists() {
+        return Ok(false);
+    }
+
+    if let Some(parent) = std::path::Path::new(&task.input_file).parent() {
+        std::fs::create_dir_all(parent)?;
+    }
+
+    let compressed_path = format!("{}.gz", task.input_file);
+    println!(
+        "[debug][download] map_id={} url={} target={}",
+        task.map_id, task.input_url, task.input_file
+    );
+    run_command(Command::new("curl").args([
+        "-L",
+        "--retry",
+        "5",
+        "--retry-delay",
+        "3",
+        "-C",
+        "-",
+        task.input_url.as_str(),
+        "-o",
+        compressed_path.as_str(),
+    ]))?;
+    run_command(Command::new("gunzip").args(["-f", compressed_path.as_str()]))?;
+    Ok(true)
+}
+
+fn remove_input_file(path: &str) {
+    match std::fs::remove_file(path) {
+        Ok(()) => println!("[debug][cleanup] removed input_file={}", path),
+        Err(err) => eprintln!(
+            "[warn][cleanup] could not remove input_file={}: {}",
+            path, err
+        ),
+    }
+}
+
+fn run_command(command: &mut Command) -> Result<()> {
+    let output = command.output()?;
+    if output.status.success() {
+        return Ok(());
+    }
+
+    anyhow::bail!(
+        "command failed with status {:?}: stdout='{}' stderr='{}'",
+        output.status.code(),
+        String::from_utf8_lossy(&output.stdout).trim(),
+        String::from_utf8_lossy(&output.stderr).trim()
+    )
 }
 
 async fn handle_reduce_task(
@@ -133,18 +201,24 @@ async fn handle_reduce_task(
 
     let output_entries = map_to_sorted_vec(reduce_entries(payload.entries));
     let entry_count = output_entries.len();
+    let result_payload = ReduceResultPayload {
+        job_id: payload.job_id.clone(),
+        worker_id: worker_id.to_string(),
+        reduce_id: payload.reduce_id,
+        entry_count,
+        entries: output_entries,
+    };
+    let payload_bytes = bincode::serialized_size(&result_payload).unwrap_or(0);
+    println!(
+        "[debug][reduce-result] reduce_id={} entries={} payload_bytes={} transfer=bincode-kafka",
+        payload.reduce_id, entry_count, payload_bytes
+    );
 
     send_binary(
         producer,
         &topics.reduce_results,
         &format!("reduce-result-{}", payload.reduce_id),
-        &ReduceResultPayload {
-            job_id: payload.job_id.clone(),
-            worker_id: worker_id.to_string(),
-            reduce_id: payload.reduce_id,
-            entry_count,
-            entries: output_entries,
-        },
+        &result_payload,
     )
     .await?;
 
