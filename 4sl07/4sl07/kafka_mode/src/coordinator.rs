@@ -102,7 +102,8 @@ pub async fn run_coordinator(run: RunConfig) -> Result<()> {
     let mut reduce_dispatched: Vec<bool> = vec![false; run.reduce_count];
     let mut map_done: FxHashSet<usize> = FxHashSet::default();
 
-    while map_done.len() < computed_maps {
+    while map_done.len() < computed_maps || reduce_dispatched.iter().any(|dispatched| !*dispatched)
+    {
         tokio::select! {
             res = recv_binary::<MapPartitionPayload>(&map_results_consumer) => {
                 if let Some((payload, msg)) = res? {
@@ -124,7 +125,7 @@ pub async fn run_coordinator(run: RunConfig) -> Result<()> {
                                 &topics,
                                 &run,
                             ).await?;
-                            }
+                        }
                     }
                     commit_message(&map_results_consumer, &msg)?;
                 }
