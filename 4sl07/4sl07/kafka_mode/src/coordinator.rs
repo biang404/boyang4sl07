@@ -11,9 +11,19 @@ use crate::messages::{
 use anyhow::Result;
 use rustc_hash::{FxHashMap, FxHashSet};
 use std::path::Path;
+use std::time::{Instant, SystemTime, UNIX_EPOCH};
 use tokio::fs;
 
 pub async fn run_coordinator(run: RunConfig) -> Result<()> {
+    let job_start_time = now_ms();
+    log_metric(serde_json::json!({
+        "event": "job_start",
+        "job_id": run.job_id,
+        "job_start_time": job_start_time,
+        "workers": run.workers,
+        "reduce_count": run.reduce_count,
+    }));
+
     let topics = TopicNames::from_job(&run.job_id);
     if run.workers == 0 {
         anyhow::bail!("--workers must be greater than 0");
@@ -89,6 +99,15 @@ pub async fn run_coordinator(run: RunConfig) -> Result<()> {
         .await?;
     }
     println!("Published {} map tasks", computed_maps);
+    println!("All input file names sent to Kafka map topic");
+    let all_file_names_sent_at = Instant::now();
+    let all_file_names_sent_time = now_ms();
+    log_metric(serde_json::json!({
+        "event": "all_input_file_names_sent",
+        "job_id": run.job_id,
+        "file_names_sent_time": all_file_names_sent_time,
+        "map_task_count": computed_maps,
+    }));
 
     let map_results_consumer = create_consumer(
         &run.bootstrap_servers,
@@ -109,6 +128,7 @@ pub async fn run_coordinator(run: RunConfig) -> Result<()> {
     let mut map_counts: Vec<usize> = vec![0usize; run.reduce_count];
     let mut reduce_dispatched: Vec<bool> = vec![false; run.reduce_count];
     let mut map_done: FxHashSet<usize> = FxHashSet::default();
+    let mut all_input_files_processed_logged = false;
 
     while map_done.len() < computed_maps || reduce_dispatched.iter().any(|dispatched| !*dispatched)
     {
@@ -116,6 +136,19 @@ pub async fn run_coordinator(run: RunConfig) -> Result<()> {
             res = recv_binary::<MapPartitionPayload>(&map_results_consumer) => {
                 if let Some((payload, msg)) = res? {
                     if payload.job_id == run.job_id && payload.reduce_id < run.reduce_count {
+                        let receive_time = now_ms();
+                        let payload_bytes = bincode::serialized_size(&payload).unwrap_or(0);
+                        log_metric(serde_json::json!({
+                            "event": "map_partition_shuffle_received",
+                            "job_id": payload.job_id,
+                            "map_task_id": payload.map_id,
+                            "reduce_id": payload.reduce_id,
+                            "source_worker": payload.worker_id,
+                            "destination_host": local_host,
+                            "partition_file_size_bytes": payload_bytes,
+                            "shuffle_receive_time": receive_time,
+                            "transport": "kafka_bincode",
+                        }));
                         let reduce_id = payload.reduce_id;
                         let acc = &mut reduce_accumulators[reduce_id];
                         for (k, v) in payload.entries {
@@ -144,6 +177,24 @@ pub async fn run_coordinator(run: RunConfig) -> Result<()> {
                     if a.job_id == run.job_id && matches!(a.phase, TaskPhase::Map) {
                         map_done.insert(a.task_id);
                         println!("Map done: {}/{}", map_done.len(), computed_maps);
+                        if map_done.len() == computed_maps && !all_input_files_processed_logged {
+                            all_input_files_processed_logged = true;
+                            let elapsed = all_file_names_sent_at.elapsed();
+                            println!(
+                                "All input files processed after filenames_sent: {:.3}s ({} ms)",
+                                elapsed.as_secs_f64(),
+                                elapsed.as_millis()
+                            );
+                            log_metric(serde_json::json!({
+                                "event": "all_input_files_processed",
+                                "job_id": run.job_id,
+                                "file_names_sent_time": all_file_names_sent_time,
+                                "all_input_files_processed_time": now_ms(),
+                                "elapsed_ms": elapsed.as_millis(),
+                                "elapsed_seconds": elapsed.as_secs_f64(),
+                                "map_task_count": computed_maps,
+                            }));
+                        }
                     }
                     commit_message(&ack_consumer, &msg)?;
                 }
@@ -186,6 +237,14 @@ pub async fn run_coordinator(run: RunConfig) -> Result<()> {
     }
 
     write_results(&run.result_dir, &run.job_id, final_results).await?;
+    let job_done_time = now_ms();
+    log_metric(serde_json::json!({
+        "event": "job_done",
+        "job_id": run.job_id,
+        "job_start_time": job_start_time,
+        "job_done_time": job_done_time,
+        "job_duration_ms": job_done_time.saturating_sub(job_start_time),
+    }));
     println!("Job {} completed", run.job_id);
     Ok(())
 }
@@ -254,6 +313,7 @@ async fn dispatch_reduce_task(
         "Dispatched reduce task {} ({} unique entries, payload_bytes={})",
         reduce_id, payload.entry_count, payload_bytes
     );
+    let shuffle_start_time = now_ms();
     send_binary_to_partition(
         producer,
         &topics.reduce_tasks,
@@ -262,6 +322,19 @@ async fn dispatch_reduce_task(
         &payload,
     )
     .await?;
+    let shuffle_end_time = now_ms();
+    log_metric(serde_json::json!({
+        "event": "reduce_input_shuffle",
+        "job_id": run.job_id,
+        "reduce_task_id": reduce_id,
+        "source_worker": "coordinator",
+        "destination_host": "worker-consumer-group",
+        "partition_file_size_bytes": payload_bytes,
+        "shuffle_or_scp_start_time": shuffle_start_time,
+        "shuffle_or_scp_end_time": shuffle_end_time,
+        "shuffle_duration_ms": shuffle_end_time.saturating_sub(shuffle_start_time),
+        "transport": "kafka_bincode",
+    }));
     Ok(())
 }
 
@@ -276,9 +349,34 @@ async fn write_results(
     for (reduce_id, entries) in final_results {
         let path = format!("{result_dir}/reduce_{reduce_id}_{job_id}.json");
         let json = serde_json::to_string_pretty(&entries)?;
-        fs::write(path, json).await?;
+        let output_bytes = json.as_bytes().len();
+        let output_write_start_time = now_ms();
+        fs::write(&path, json).await?;
+        let output_write_end_time = now_ms();
+        log_metric(serde_json::json!({
+            "event": "output_file_write",
+            "job_id": job_id,
+            "reduce_task_id": reduce_id,
+            "output_write_start_time": output_write_start_time,
+            "output_write_end_time": output_write_end_time,
+            "output_write_duration_ms": output_write_end_time.saturating_sub(output_write_start_time),
+            "output_bytes": output_bytes,
+            "output_path": path,
+            "output_kind": "final_json_file",
+        }));
     }
     Ok(())
+}
+
+fn log_metric(value: serde_json::Value) {
+    println!("[metric] {}", value);
+}
+
+fn now_ms() -> u64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_millis() as u64)
+        .unwrap_or(0)
 }
 
 fn local_host_fqdn() -> String {

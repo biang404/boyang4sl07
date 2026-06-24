@@ -76,8 +76,9 @@ async fn handle_map_task(
     worker_id: &str,
     task: MapTask,
 ) -> Result<()> {
+    let map_start_time = now_ms();
     let downloaded_input = prepare_input_file(&task)?;
-    let result = handle_prepared_map_task(producer, topics, worker_id, &task).await;
+    let result = handle_prepared_map_task(producer, topics, worker_id, &task, map_start_time).await;
     if downloaded_input {
         remove_input_file(&task.input_file);
     }
@@ -89,8 +90,12 @@ async fn handle_prepared_map_task(
     topics: &TopicNames,
     worker_id: &str,
     task: &MapTask,
+    map_start_time: u64,
 ) -> Result<()> {
+    let input_bytes = std::fs::metadata(&task.input_file)?.len();
+    let input_read_start_time = now_ms();
     let mapped = map_file(&task.input_file)?;
+    let input_read_end_time = now_ms();
     let mut partitions = partition_map(mapped, task.reduce_count);
 
     for (reduce_id, entries) in partitions.drain(..).enumerate() {
@@ -108,6 +113,7 @@ async fn handle_prepared_map_task(
             "[debug][map] map_id={} reduce_id={} entries={} payload_bytes={} transfer=bincode-kafka",
             task.map_id, reduce_id, entry_count, payload_bytes
         );
+        let shuffle_start_time = now_ms();
         send_binary(
             producer,
             &topics.map_results,
@@ -115,6 +121,20 @@ async fn handle_prepared_map_task(
             &payload,
         )
         .await?;
+        let shuffle_end_time = now_ms();
+        log_metric(serde_json::json!({
+            "event": "map_partition_shuffle",
+            "job_id": task.job_id,
+            "map_task_id": task.map_id,
+            "reduce_id": reduce_id,
+            "source_worker": worker_id,
+            "destination_host": task.coordinator_host,
+            "partition_file_size_bytes": payload_bytes,
+            "shuffle_or_scp_start_time": shuffle_start_time,
+            "shuffle_or_scp_end_time": shuffle_end_time,
+            "shuffle_duration_ms": shuffle_end_time.saturating_sub(shuffle_start_time),
+            "transport": "kafka_bincode",
+        }));
     }
 
     send_json(
@@ -130,6 +150,20 @@ async fn handle_prepared_map_task(
         },
     )
     .await?;
+    let map_done_time = now_ms();
+    log_metric(serde_json::json!({
+        "event": "map_task",
+        "job_id": task.job_id,
+        "map_task_id": task.map_id,
+        "worker_id": worker_id,
+        "map_start_time": map_start_time,
+        "input_read_start_time": input_read_start_time,
+        "input_read_end_time": input_read_end_time,
+        "input_bytes": input_bytes,
+        "map_done_time": map_done_time,
+        "input_read_duration_ms": input_read_end_time.saturating_sub(input_read_start_time),
+        "map_task_duration_ms": map_done_time.saturating_sub(map_start_time),
+    }));
 
     Ok(())
 }
@@ -194,12 +228,18 @@ async fn handle_reduce_task(
     worker_id: &str,
     payload: ReduceTaskPayload,
 ) -> Result<()> {
+    let reduce_start_time = now_ms();
+    let shuffle_all_inputs_done_time = reduce_start_time;
     println!(
         "[debug][reduce] reduce_id={} entries={} transfer=bincode-kafka",
         payload.reduce_id, payload.entry_count
     );
 
-    let output_entries = map_to_sorted_vec(reduce_entries(payload.entries));
+    let reduce_merge_start_time = now_ms();
+    let reduced_entries = reduce_entries(payload.entries);
+    let sort_start_time = now_ms();
+    let output_entries = map_to_sorted_vec(reduced_entries);
+    let sort_end_time = now_ms();
     let entry_count = output_entries.len();
     let result_payload = ReduceResultPayload {
         job_id: payload.job_id.clone(),
@@ -214,6 +254,7 @@ async fn handle_reduce_task(
         payload.reduce_id, entry_count, payload_bytes
     );
 
+    let output_write_start_time = now_ms();
     send_binary(
         producer,
         &topics.reduce_results,
@@ -221,6 +262,7 @@ async fn handle_reduce_task(
         &result_payload,
     )
     .await?;
+    let output_write_end_time = now_ms();
 
     send_json(
         producer,
@@ -235,8 +277,32 @@ async fn handle_reduce_task(
         },
     )
     .await?;
+    let reduce_done_time = now_ms();
+    log_metric(serde_json::json!({
+        "event": "reduce_task",
+        "job_id": result_payload.job_id,
+        "reduce_task_id": result_payload.reduce_id,
+        "worker_id": worker_id,
+        "reduce_start_time": reduce_start_time,
+        "shuffle_all_inputs_done_time": shuffle_all_inputs_done_time,
+        "reduce_merge_start_time": reduce_merge_start_time,
+        "sort_start_time": sort_start_time,
+        "sort_end_time": sort_end_time,
+        "output_write_start_time": output_write_start_time,
+        "output_write_end_time": output_write_end_time,
+        "output_bytes": payload_bytes,
+        "output_kind": "kafka_reduce_result_payload",
+        "reduce_done_time": reduce_done_time,
+        "sort_duration_ms": sort_end_time.saturating_sub(sort_start_time),
+        "output_write_duration_ms": output_write_end_time.saturating_sub(output_write_start_time),
+        "reduce_task_duration_ms": reduce_done_time.saturating_sub(reduce_start_time),
+    }));
 
     Ok(())
+}
+
+fn log_metric(value: serde_json::Value) {
+    println!("[metric] {}", value);
 }
 
 fn now_ms() -> u64 {
