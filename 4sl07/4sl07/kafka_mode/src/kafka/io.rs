@@ -2,9 +2,14 @@ use anyhow::{Context, Result};
 use futures::StreamExt;
 use rdkafka::ClientConfig;
 use rdkafka::Message;
-use rdkafka::consumer::{CommitMode, Consumer, StreamConsumer};
+use rdkafka::client::ClientContext;
+use rdkafka::consumer::{
+    BaseConsumer, CommitMode, Consumer, ConsumerContext, Rebalance, StreamConsumer,
+};
 use rdkafka::message::BorrowedMessage;
 use rdkafka::producer::{FutureProducer, FutureRecord};
+use rdkafka::statistics::Statistics;
+use rdkafka::topic_partition_list::TopicPartitionList;
 use rustc_hash::FxHashMap;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
@@ -13,6 +18,109 @@ use uuid::Uuid;
 
 const DATA_MESSAGE_MAX_BYTES: usize = 67_108_864;
 const BINARY_CHUNK_PAYLOAD_BYTES: usize = 48 * 1024 * 1024;
+const CONSUMER_SESSION_TIMEOUT_MS: &str = "120000";
+const CONSUMER_MAX_POLL_INTERVAL_MS: &str = "900000";
+const CONSUMER_HEARTBEAT_INTERVAL_MS: &str = "3000";
+const COMMIT_RETRY_ATTEMPTS: usize = 8;
+const CONSUMER_STATS_INTERVAL_MS: &str = "10000";
+
+pub type AppConsumer = StreamConsumer<LoggingConsumerContext>;
+
+#[derive(Clone, Debug)]
+pub struct LoggingConsumerContext {
+    group_id: String,
+    topics: Vec<String>,
+}
+
+impl LoggingConsumerContext {
+    fn new(group_id: &str, topics: &[&str]) -> Self {
+        Self {
+            group_id: group_id.to_string(),
+            topics: topics.iter().map(|topic| topic.to_string()).collect(),
+        }
+    }
+}
+
+impl ClientContext for LoggingConsumerContext {
+    fn stats(&self, stats: Statistics) {
+        let broker_states: Vec<serde_json::Value> = stats
+            .brokers
+            .values()
+            .map(|broker| {
+                serde_json::json!({
+                    "name": broker.name,
+                    "nodename": broker.nodename,
+                    "state": broker.state,
+                    "stateage_ms": broker.stateage / 1000,
+                    "outbuf_cnt": broker.outbuf_cnt,
+                    "waitresp_cnt": broker.waitresp_cnt,
+                    "txerrs": broker.txerrs,
+                    "txretries": broker.txretries,
+                    "req_timeouts": broker.req_timeouts,
+                    "rxerrs": broker.rxerrs,
+                    "disconnects": broker.disconnects,
+                })
+            })
+            .collect();
+
+        let cgrp = stats.cgrp.as_ref().map(|group| {
+            serde_json::json!({
+                "state": group.state,
+                "stateage_ms": group.stateage,
+                "join_state": group.join_state,
+                "rebalance_age_ms": group.rebalance_age,
+                "rebalance_cnt": group.rebalance_cnt,
+                "rebalance_reason": group.rebalance_reason,
+                "assignment_size": group.assignment_size,
+            })
+        });
+
+        log_metric(serde_json::json!({
+            "event": "kafka_consumer_group_stats",
+            "group_id": self.group_id,
+            "topics": self.topics,
+            "client_name": stats.name,
+            "client_id": stats.client_id,
+            "replyq": stats.replyq,
+            "rxmsgs": stats.rxmsgs,
+            "rxmsg_bytes": stats.rxmsg_bytes,
+            "tx": stats.tx,
+            "rx": stats.rx,
+            "consumer_group": cgrp,
+            "brokers": broker_states,
+        }));
+    }
+}
+
+impl ConsumerContext for LoggingConsumerContext {
+    fn pre_rebalance(&self, _base_consumer: &BaseConsumer<Self>, rebalance: &Rebalance<'_>) {
+        log_metric(serde_json::json!({
+            "event": "kafka_consumer_rebalance_pre",
+            "group_id": self.group_id,
+            "topics": self.topics,
+            "rebalance": rebalance_summary(rebalance),
+            "assignment": rebalance_partitions(rebalance),
+        }));
+        eprintln!(
+            "[warn][kafka-rebalance] pre group_id={} rebalance={:?}",
+            self.group_id, rebalance
+        );
+    }
+
+    fn post_rebalance(&self, _base_consumer: &BaseConsumer<Self>, rebalance: &Rebalance<'_>) {
+        log_metric(serde_json::json!({
+            "event": "kafka_consumer_rebalance_post",
+            "group_id": self.group_id,
+            "topics": self.topics,
+            "rebalance": rebalance_summary(rebalance),
+            "assignment": rebalance_partitions(rebalance),
+        }));
+        eprintln!(
+            "[warn][kafka-rebalance] post group_id={} rebalance={:?}",
+            self.group_id, rebalance
+        );
+    }
+}
 
 pub fn create_producer(bootstrap_servers: &str) -> Result<FutureProducer> {
     ClientConfig::new()
@@ -26,14 +134,20 @@ pub fn create_consumer(
     bootstrap_servers: &str,
     group_id: &str,
     topics: &[&str],
-) -> Result<StreamConsumer> {
-    let consumer: StreamConsumer = ClientConfig::new()
+) -> Result<AppConsumer> {
+    let context = LoggingConsumerContext::new(group_id, topics);
+    let consumer: AppConsumer = ClientConfig::new()
         .set("bootstrap.servers", bootstrap_servers)
         .set("group.id", group_id)
+        .set("client.id", group_id)
         .set("enable.partition.eof", "false")
-        .set("session.timeout.ms", "10000")
+        .set("session.timeout.ms", CONSUMER_SESSION_TIMEOUT_MS)
+        .set("max.poll.interval.ms", CONSUMER_MAX_POLL_INTERVAL_MS)
+        .set("heartbeat.interval.ms", CONSUMER_HEARTBEAT_INTERVAL_MS)
         .set("enable.auto.commit", "false")
         .set("auto.offset.reset", "earliest")
+        .set("statistics.interval.ms", CONSUMER_STATS_INTERVAL_MS)
+        .set("debug", "cgrp,broker,protocol")
         .set(
             "fetch.message.max.bytes",
             DATA_MESSAGE_MAX_BYTES.to_string(),
@@ -42,7 +156,7 @@ pub fn create_consumer(
             "max.partition.fetch.bytes",
             DATA_MESSAGE_MAX_BYTES.to_string(),
         )
-        .create()
+        .create_with_context(context)
         .context("failed to create Kafka consumer")?;
     consumer.subscribe(topics)?;
     Ok(consumer)
@@ -199,7 +313,7 @@ async fn send_binary_frame(
 }
 
 pub async fn recv_json<T: DeserializeOwned>(
-    consumer: &StreamConsumer,
+    consumer: &AppConsumer,
 ) -> Result<Option<(T, BorrowedMessage<'_>)>> {
     let mut stream = consumer.stream();
     if let Some(msg) = stream.next().await {
@@ -216,7 +330,7 @@ pub async fn recv_json<T: DeserializeOwned>(
 }
 
 pub async fn recv_binary<'a, T: DeserializeOwned>(
-    consumer: &'a StreamConsumer,
+    consumer: &'a AppConsumer,
     collector: &mut BinaryChunkCollector,
 ) -> Result<Option<(T, BorrowedMessage<'a>)>> {
     loop {
@@ -339,7 +453,85 @@ impl BinaryChunkCollector {
     }
 }
 
-pub fn commit_message(consumer: &StreamConsumer, msg: &BorrowedMessage<'_>) -> Result<()> {
-    consumer.commit_message(msg, CommitMode::Sync)?;
+pub fn commit_message(consumer: &AppConsumer, msg: &BorrowedMessage<'_>) -> Result<()> {
+    for attempt in 1..=COMMIT_RETRY_ATTEMPTS {
+        match consumer.commit_message(msg, CommitMode::Sync) {
+            Ok(()) => return Ok(()),
+            Err(err) => {
+                log_metric(serde_json::json!({
+                    "event": "kafka_consumer_commit_error",
+                    "attempt": attempt,
+                    "max_attempts": COMMIT_RETRY_ATTEMPTS,
+                    "topic": msg.topic(),
+                    "partition": msg.partition(),
+                    "offset": msg.offset(),
+                    "error": err.to_string(),
+                    "hint": commit_error_hint(&err.to_string()),
+                }));
+                eprintln!(
+                    "[warn][kafka-commit] attempt {}/{} failed topic={} partition={} offset={} error={} hint={}",
+                    attempt,
+                    COMMIT_RETRY_ATTEMPTS,
+                    msg.topic(),
+                    msg.partition(),
+                    msg.offset(),
+                    err,
+                    commit_error_hint(&err.to_string())
+                );
+                if attempt < COMMIT_RETRY_ATTEMPTS {
+                    std::thread::sleep(Duration::from_millis(500 * attempt as u64));
+                }
+            }
+        }
+    }
+    eprintln!("[warn][kafka-commit] giving up after retries; continuing without crashing");
     Ok(())
+}
+
+fn log_metric(value: serde_json::Value) {
+    println!("[metric] {}", value);
+}
+
+fn rebalance_summary(rebalance: &Rebalance<'_>) -> serde_json::Value {
+    match rebalance {
+        Rebalance::Assign(_) => serde_json::json!({"kind": "assign"}),
+        Rebalance::Revoke(_) => serde_json::json!({"kind": "revoke"}),
+        Rebalance::Error(err) => {
+            serde_json::json!({"kind": "error", "error": err.to_string()})
+        }
+    }
+}
+
+fn rebalance_partitions(rebalance: &Rebalance<'_>) -> Vec<serde_json::Value> {
+    match rebalance {
+        Rebalance::Assign(tpl) | Rebalance::Revoke(tpl) => topic_partition_list(tpl),
+        Rebalance::Error(_) => Vec::new(),
+    }
+}
+
+fn topic_partition_list(tpl: &TopicPartitionList) -> Vec<serde_json::Value> {
+    tpl.elements()
+        .into_iter()
+        .map(|elem| {
+            serde_json::json!({
+                "topic": elem.topic(),
+                "partition": elem.partition(),
+                "offset": format!("{:?}", elem.offset()),
+            })
+        })
+        .collect()
+}
+
+fn commit_error_hint(error: &str) -> &'static str {
+    if error.contains("WaitingForCoordinator") {
+        "consumer group coordinator is unavailable or group is rebalancing; check kafka_consumer_group_stats.rebalance_reason and broker logs"
+    } else if error.contains("RebalanceInProgress") {
+        "consumer group rebalance is in progress; commit can be retried after assignment stabilizes"
+    } else if error.contains("IllegalGeneration") || error.contains("UnknownMemberId") {
+        "consumer lost its group generation, often after session timeout or member eviction"
+    } else if error.contains("MaxPollExceeded") {
+        "consumer processing exceeded max.poll.interval.ms"
+    } else {
+        "inspect nearby kafka_consumer_rebalance_* and kafka_consumer_group_stats metrics"
+    }
 }
