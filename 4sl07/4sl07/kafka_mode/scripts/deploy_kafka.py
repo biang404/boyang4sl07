@@ -242,6 +242,15 @@ def host_has_local_broker(user: str, host: str, port: int) -> bool:
         return False
 
 
+def wait_for_local_broker(user: str, host: str, port: int, timeout_seconds: int = 60) -> bool:
+    deadline = time.time() + timeout_seconds
+    while time.time() < deadline:
+        if host_has_local_broker(user, host, port):
+            return True
+        time.sleep(2)
+    return host_has_local_broker(user, host, port)
+
+
 def discover_broker_host(user: str, candidate_hosts: list[str], port: int) -> str | None:
     for host in candidate_hosts:
         if host_has_local_broker(user, host, port):
@@ -387,8 +396,8 @@ def start_broker_on_host(
 
     try:
         ssh(user, host, remote_cmd)
-        time.sleep(3)
-        if host_has_local_broker(user, host, port):
+        print(f"[{host}] waiting for broker port {port} to become reachable...")
+        if wait_for_local_broker(user, host, port):
             return True, kafka_home
         diagnostic_cmd = (
             f"tmux has-session -t {broker_session} 2>/dev/null && echo tmux:running || echo tmux:missing; "
