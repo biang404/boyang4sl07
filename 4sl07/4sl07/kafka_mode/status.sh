@@ -75,6 +75,8 @@ echo "Coordinator"
 ssh "${SSH_OPTS[@]}" "$USER_NAME@$COORDINATOR_HOST" "
 echo '[tmux]';
 tmux has-session -t $COORDINATOR_SESSION 2>/dev/null && echo running || echo missing;
+echo '[exit]';
+if [ -f $TMP_DIR/coordinator.exit ]; then cat $TMP_DIR/coordinator.exit; else echo no coordinator.exit; fi;
 echo '[log tail]';
 if [ -f $TMP_DIR/coordinator.log ]; then tail -n 20 $TMP_DIR/coordinator.log; else echo no coordinator.log; fi;
 echo '[results]';
@@ -88,6 +90,8 @@ for host in "${WORKER_HOSTS[@]}"; do
     ssh "${SSH_OPTS[@]}" "$USER_NAME@$host" "
 echo '[tmux]';
 tmux has-session -t $WORKER_SESSION 2>/dev/null && echo running || echo missing;
+echo '[exit]';
+if [ -f $TMP_DIR/worker.exit ]; then cat $TMP_DIR/worker.exit; else echo no worker.exit; fi;
 echo '[log tail]';
 if [ -f $TMP_DIR/worker.log ]; then tail -n 10 $TMP_DIR/worker.log; else echo no worker.log; fi
 "

@@ -160,14 +160,22 @@ pub async fn run_coordinator(run: RunConfig) -> Result<()> {
                             && !reduce_dispatched[reduce_id]
                         {
                             reduce_dispatched[reduce_id] = true;
+                            let accumulator =
+                                std::mem::take(&mut reduce_accumulators[reduce_id]);
                             dispatch_reduce_task(
                                 reduce_id,
-                                &reduce_accumulators[reduce_id],
+                                &accumulator,
                                 &producer,
                                 &topics,
                                 &run,
                                 reduce_task_partitions,
                             ).await?;
+                            let released_entries = accumulator.len();
+                            drop(accumulator);
+                            println!(
+                                "[debug][coordinator-memory] released reduce accumulator reduce_id={} entries={}",
+                                reduce_id, released_entries
+                            );
                         }
                     }
                     commit_message(&map_results_consumer, &msg)?;

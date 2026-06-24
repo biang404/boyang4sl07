@@ -328,6 +328,22 @@ def ensure_tmux_session_running(user: str, host: str, session: str, log_path: st
         )
 
 
+def tmux_logged_command(session: str, run_cmd: str, log_path: str, exit_path: str) -> str:
+    script = (
+        "set -o pipefail; "
+        f"{run_cmd} 2>&1 | tee {shell_quote(log_path)}; "
+        "status=${PIPESTATUS[0]}; "
+        f"echo \"[exit] $(date -Is) status=$status\" | tee -a {shell_quote(log_path)} {shell_quote(exit_path)}; "
+        f"(dmesg 2>/dev/null | tail -n 80 | grep -Ei 'out of memory|oom|killed process|kafka_mode' || true) "
+        f"| sed 's/^/[dmesg] /' | tee -a {shell_quote(log_path)} {shell_quote(exit_path)}; "
+        "exit $status"
+    )
+    return (
+        f"tmux kill-session -t {session} 2>/dev/null || true; "
+        f"tmux new -d -s {session} {shell_quote('bash -lc ' + shell_quote(script))}"
+    )
+
+
 def discover_kafka_home(user: str, host: str, kafka_home_hint: str | None) -> str | None:
     hint = kafka_home_hint or ""
     remote_cmd = (
@@ -650,10 +666,7 @@ def main() -> int:
 
     coordinator_session = session_name("coordinator", args.job_id)
     coordinator_input_args = f"--input-manifest {manifest_path} "
-    coord_cmd = (
-        f"mkdir -p {args.tmp_dir}; "
-        f"tmux kill-session -t {coordinator_session} 2>/dev/null || true; "
-        f"tmux new -d -s {coordinator_session} \""
+    coordinator_run_cmd = (
         f"{remote_binary} coordinator "
         f"--bootstrap-servers {bootstrap_servers} "
         f"--job-id {args.job_id} "
@@ -664,8 +677,16 @@ def main() -> int:
         f"--version DefaultWithLanguageSplit "
         f"{coordinator_input_args}"
         f"--result-dir {args.tmp_dir}/result "
-        f"--work-dir {args.tmp_dir} "
-        f"2>&1 | tee {args.tmp_dir}/coordinator.log\""
+        f"--work-dir {args.tmp_dir}"
+    )
+    coord_cmd = (
+        f"mkdir -p {args.tmp_dir}; "
+        + tmux_logged_command(
+            coordinator_session,
+            coordinator_run_cmd,
+            f"{args.tmp_dir}/coordinator.log",
+            f"{args.tmp_dir}/coordinator.exit",
+        )
     )
     print(f"Starting coordinator on {coordinator_host}...")
     ssh(args.user, coordinator_host, coord_cmd)
@@ -683,10 +704,7 @@ def main() -> int:
         jobs = []
         for host in selected_workers:
             worker_session = session_name("worker", args.job_id)
-            worker_cmd = (
-                f"mkdir -p {args.tmp_dir}; "
-                f"tmux kill-session -t {worker_session} 2>/dev/null || true; "
-                f"tmux new -d -s {worker_session} \""
+            worker_run_cmd = (
                 f"{remote_binary} worker "
                 f"--bootstrap-servers {bootstrap_servers} "
                 f"--job-id {args.job_id} "
@@ -695,8 +713,16 @@ def main() -> int:
                 f"--chunk-size-bytes {args.chunk_size_bytes} "
                 f"--reduce-count {args.reduce_count} "
                 f"--version DefaultWithLanguageSplit "
-                f"--work-dir {args.tmp_dir} "
-                f"2>&1 | tee {args.tmp_dir}/worker.log\""
+                f"--work-dir {args.tmp_dir}"
+            )
+            worker_cmd = (
+                f"mkdir -p {args.tmp_dir}; "
+                + tmux_logged_command(
+                    worker_session,
+                    worker_run_cmd,
+                    f"{args.tmp_dir}/worker.log",
+                    f"{args.tmp_dir}/worker.exit",
+                )
             )
             jobs.append(pool.submit(ssh, args.user, host, worker_cmd))
         for job in as_completed(jobs):
