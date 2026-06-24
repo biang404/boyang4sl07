@@ -1,7 +1,7 @@
 use crate::config::{RunConfig, TopicNames};
 use crate::kafka::admin::ensure_topics;
 use crate::kafka::io::{
-    commit_message, create_consumer, create_producer, recv_binary, recv_json,
+    BinaryChunkCollector, commit_message, create_consumer, create_producer, recv_binary, recv_json,
     send_binary_to_partition, send_json_to_partition,
 };
 use crate::messages::{
@@ -129,11 +129,12 @@ pub async fn run_coordinator(run: RunConfig) -> Result<()> {
     let mut reduce_dispatched: Vec<bool> = vec![false; run.reduce_count];
     let mut map_done: FxHashSet<usize> = FxHashSet::default();
     let mut all_input_files_processed_logged = false;
+    let mut map_results_chunks = BinaryChunkCollector::default();
 
     while map_done.len() < computed_maps || reduce_dispatched.iter().any(|dispatched| !*dispatched)
     {
         tokio::select! {
-            res = recv_binary::<MapPartitionPayload>(&map_results_consumer) => {
+            res = recv_binary::<MapPartitionPayload>(&map_results_consumer, &mut map_results_chunks) => {
                 if let Some((payload, msg)) = res? {
                     if payload.job_id == run.job_id && payload.reduce_id < run.reduce_count {
                         let receive_time = now_ms();
@@ -212,10 +213,11 @@ pub async fn run_coordinator(run: RunConfig) -> Result<()> {
 
     let mut reduce_done: FxHashSet<usize> = FxHashSet::default();
     let mut final_results: FxHashMap<usize, Vec<(String, u32)>> = FxHashMap::default();
+    let mut reduce_results_chunks = BinaryChunkCollector::default();
 
     while final_results.len() < run.reduce_count {
         tokio::select! {
-            res = recv_binary::<ReduceResultPayload>(&reduce_results_consumer) => {
+            res = recv_binary::<ReduceResultPayload>(&reduce_results_consumer, &mut reduce_results_chunks) => {
                 if let Some((payload, msg)) = res? {
                     if payload.job_id == run.job_id {
                         final_results.insert(payload.reduce_id, payload.entries);

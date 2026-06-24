@@ -2,8 +2,8 @@ use crate::config::{RunConfig, TopicNames};
 use crate::core::map::{map_file, partition_map};
 use crate::core::reduce::{map_to_sorted_vec, reduce_entries};
 use crate::kafka::io::{
-    commit_message, create_consumer, create_producer, recv_binary, recv_json, send_binary,
-    send_json,
+    BinaryChunkCollector, commit_message, create_consumer, create_producer, recv_binary, recv_json,
+    send_binary, send_json,
 };
 use crate::messages::{
     MapPartitionPayload, MapTask, ReduceResultPayload, ReduceTaskPayload, TaskAck, TaskPhase,
@@ -47,6 +47,7 @@ pub async fn run_worker(run: RunConfig, worker_id: Option<String>) -> Result<()>
     )?;
 
     println!("Worker {} started", worker_id);
+    let mut reduce_task_chunks = BinaryChunkCollector::default();
 
     loop {
         tokio::select! {
@@ -58,7 +59,7 @@ pub async fn run_worker(run: RunConfig, worker_id: Option<String>) -> Result<()>
                     commit_message(&map_consumer, &msg)?;
                 }
             }
-            reduce_msg = recv_binary::<ReduceTaskPayload>(&reduce_consumer) => {
+            reduce_msg = recv_binary::<ReduceTaskPayload>(&reduce_consumer, &mut reduce_task_chunks) => {
                 if let Some((task, msg)) = reduce_msg? {
                     if task.job_id == run.job_id {
                         handle_reduce_task(&producer, &topics, &worker_id, task).await?;

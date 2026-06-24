@@ -43,13 +43,13 @@ Design and review notes are tracked in `ARCHITECTURE_AUDIT.md`.
 Recommended command:
 
 ```bash
-bash deploy.sh <ssh_user> [workers] [map_tasks]
+bash deploy.sh <ssh_user> [workers] [wet_files] [reduce_count]
 ```
 
 Example:
 
 ```bash
-bash deploy.sh bxu-24 4 64
+bash deploy.sh bxu-24 4 50 64
 ```
 
 Then monitor the run with:
