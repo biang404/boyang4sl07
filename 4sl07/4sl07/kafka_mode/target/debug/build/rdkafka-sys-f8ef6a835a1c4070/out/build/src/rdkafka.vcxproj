@@ -22,7 +22,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{DDAA8FE2-7BD0-3CBB-B274-7A6D14223BCA}</ProjectGuid>
+    <ProjectGuid>{954D1075-B77C-3205-85F1-7F5D36E8BA54}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
@@ -59,27 +59,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">rdkafka.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">rdkafka</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">rdkafka.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">rdkafka</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">rdkafka.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">rdkafka</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">rdkafka.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">rdkafka</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/libz-sys-a343edecc7da9814/out/include" -Brepro -Brepro</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/libz-sys-a343edecc7da9814/out/include" -Brepro -Brepro</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ExceptionHandling>
@@ -104,10 +104,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;WITHOUT_WIN32_CONFIG;WITH_SSL=0;WITH_ZLIB=1;WITH_SNAPPY=0;WITH_ZSTD=0;WITH_SASL_SCRAM=0;WITH_SASL_OAUTHBEARER=0;ENABLE_DEVEL=0;WITH_PLUGINS=1;LIBRDKAFKA_STATICLIB;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\libz-sys-a343edecc7da9814\out\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\libz-sys-a343edecc7da9814\out\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\libz-sys-a343edecc7da9814\out\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\libz-sys-a343edecc7da9814\out\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -120,8 +120,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/libz-sys-a343edecc7da9814/out/include" -Brepro</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/libz-sys-a343edecc7da9814/out/include" -Brepro</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ExceptionHandling>
@@ -147,10 +147,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;NDEBUG;WITHOUT_WIN32_CONFIG;WITH_SSL=0;WITH_ZLIB=1;WITH_SNAPPY=0;WITH_ZSTD=0;WITH_SASL_SCRAM=0;WITH_SASL_OAUTHBEARER=0;ENABLE_DEVEL=0;WITH_PLUGINS=1;LIBRDKAFKA_STATICLIB;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\libz-sys-a343edecc7da9814\out\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\libz-sys-a343edecc7da9814\out\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\libz-sys-a343edecc7da9814\out\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\libz-sys-a343edecc7da9814\out\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -163,8 +163,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/libz-sys-a343edecc7da9814/out/include" -Brepro</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/libz-sys-a343edecc7da9814/out/include" -Brepro</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <ExceptionHandling>
@@ -190,10 +190,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;NDEBUG;WITHOUT_WIN32_CONFIG;WITH_SSL=0;WITH_ZLIB=1;WITH_SNAPPY=0;WITH_ZSTD=0;WITH_SASL_SCRAM=0;WITH_SASL_OAUTHBEARER=0;ENABLE_DEVEL=0;WITH_PLUGINS=1;LIBRDKAFKA_STATICLIB;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\libz-sys-a343edecc7da9814\out\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\libz-sys-a343edecc7da9814\out\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\libz-sys-a343edecc7da9814\out\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\libz-sys-a343edecc7da9814\out\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -206,8 +206,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/libz-sys-a343edecc7da9814/out/include" -Brepro</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/libz-sys-a343edecc7da9814/out/include" -Brepro</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -232,10 +232,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;NDEBUG;WITHOUT_WIN32_CONFIG;WITH_SSL=0;WITH_ZLIB=1;WITH_SNAPPY=0;WITH_ZSTD=0;WITH_SASL_SCRAM=0;WITH_SASL_OAUTHBEARER=0;ENABLE_DEVEL=0;WITH_PLUGINS=1;LIBRDKAFKA_STATICLIB;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\libz-sys-a343edecc7da9814\out\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\libz-sys-a343edecc7da9814\out\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\libz-sys-a343edecc7da9814\out\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\generated\dummy;C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\libz-sys-a343edecc7da9814\out\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -251,7 +251,7 @@
       <UseUtf8Encoding>Always</UseUtf8Encoding>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/22863/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-"C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/22863/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka -BC:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build --check-stamp-file C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/CMakeFiles/generate.stamp
+"C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/22863/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka -BC:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build --check-stamp-file C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -260,11 +260,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\CheckCSourceCompiles.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\CheckIncludeFile.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\CheckLibraryExists.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\FindPackageMessage.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\FindThreads.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\FindZLIB.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\Internal\CheckSourceCompiles.cmake;C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\packaging\cmake\rdkafka.pc.in;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/22863/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-"C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/22863/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka -BC:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build --check-stamp-file C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/CMakeFiles/generate.stamp
+"C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/22863/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka -BC:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build --check-stamp-file C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -273,11 +273,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\CheckCSourceCompiles.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\CheckIncludeFile.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\CheckLibraryExists.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\FindPackageMessage.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\FindThreads.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\FindZLIB.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\Internal\CheckSourceCompiles.cmake;C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\packaging\cmake\rdkafka.pc.in;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/22863/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-"C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/22863/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka -BC:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build --check-stamp-file C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/CMakeFiles/generate.stamp
+"C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/22863/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka -BC:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build --check-stamp-file C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -286,11 +286,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\CheckCSourceCompiles.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\CheckIncludeFile.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\CheckLibraryExists.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\FindPackageMessage.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\FindThreads.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\FindZLIB.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\Internal\CheckSourceCompiles.cmake;C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\packaging\cmake\rdkafka.pc.in;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/22863/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-"C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/22863/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka -BC:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build --check-stamp-file C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/CMakeFiles/generate.stamp
+"C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/22863/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka -BC:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build --check-stamp-file C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -299,7 +299,7 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\CheckCSourceCompiles.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\CheckIncludeFile.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\CheckLibraryExists.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\FindPackageMessage.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\FindThreads.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\FindZLIB.cmake;C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-4.1\Modules\Internal\CheckSourceCompiles.cmake;C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\packaging\cmake\rdkafka.pc.in;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
@@ -390,8 +390,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\ZERO_CHECK.vcxproj">
-      <Project>{F38FE382-94E6-3903-8E38-F6EC6066777E}</Project>
+    <ProjectReference Include="C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\ZERO_CHECK.vcxproj">
+      <Project>{F464043F-BCB7-3764-9B5D-A5093814AA8B}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

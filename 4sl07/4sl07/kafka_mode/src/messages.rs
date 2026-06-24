@@ -17,42 +17,39 @@ pub struct MapTask {
     pub chunk_size_bytes: usize,
     pub reduce_count: usize,
     pub version: String,
-    /// FQDN of the coordinator machine. Workers SCP-push map outputs here.
+    /// FQDN of the coordinator machine.
     pub coordinator_host: String,
 }
 
-/// Metadata for map partition output (file-based storage)
+/// Compact Kafka payload for one map partition output.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct MapPartitionMeta {
+pub struct MapPartitionPayload {
     pub job_id: String,
     pub worker_id: String,
-    pub file_host: String,
     pub map_id: usize,
     pub reduce_id: usize,
-    pub file_path: String,
     pub entry_count: usize,
+    pub entries: Vec<(String, u32)>,
 }
 
-/// Metadata for reduce task (file-based storage)
+/// Compact Kafka payload for one reduce task input.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ReduceTaskMeta {
+pub struct ReduceTaskPayload {
     pub job_id: String,
     pub reduce_id: usize,
-    pub file_host: String,
-    pub file_path: String,
     pub entry_count: usize,
     pub version: String,
+    pub entries: Vec<(String, u32)>,
 }
 
-/// Metadata for reduce result (file-based storage)
+/// Compact Kafka payload for one reduce task output.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ReduceResultMeta {
+pub struct ReduceResultPayload {
     pub job_id: String,
     pub worker_id: String,
-    pub file_host: String,
     pub reduce_id: usize,
-    pub file_path: String,
     pub entry_count: usize,
+    pub entries: Vec<(String, u32)>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

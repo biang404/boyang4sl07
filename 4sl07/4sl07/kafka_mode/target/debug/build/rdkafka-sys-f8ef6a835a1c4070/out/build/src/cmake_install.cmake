@@ -2,7 +2,7 @@
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out")
+  set(CMAKE_INSTALL_PREFIX "C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -33,18 +33,18 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/generated/rdkafka-static.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/generated/rdkafka-static.pc")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/Debug/rdkafka.lib")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/Debug/rdkafka.lib")
   elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ee][Aa][Ss][Ee])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/Release/rdkafka.lib")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/Release/rdkafka.lib")
   elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Mm][Ii][Nn][Ss][Ii][Zz][Ee][Rr][Ee][Ll])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/MinSizeRel/rdkafka.lib")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/MinSizeRel/rdkafka.lib")
   elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ww][Ii][Tt][Hh][Dd][Ee][Bb][Ii][Nn][Ff][Oo])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/RelWithDebInfo/rdkafka.lib")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/RelWithDebInfo/rdkafka.lib")
   endif()
 endif()
 
@@ -58,6 +58,6 @@ endif()
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/install_local_manifest.txt"
+  file(WRITE "C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

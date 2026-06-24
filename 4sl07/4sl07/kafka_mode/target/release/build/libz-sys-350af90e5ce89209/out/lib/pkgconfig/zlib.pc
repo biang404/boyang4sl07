@@ -1,4 +1,4 @@
-prefix=C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\release\build\libz-sys-350af90e5ce89209\out
+prefix=C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\release\build\libz-sys-350af90e5ce89209\out
 exec_prefix=@exec_prefix@
 libdir=${prefix}/lib
 sharedlibdir=@sharedlibdir@

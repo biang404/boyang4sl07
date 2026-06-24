@@ -2,10 +2,10 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\x64\Debug\ZERO_CHECK</FullPath>
+      <FullPath>C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\x64\Debug\ZERO_CHECK</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\x64\Debug\ALL_BUILD</FullPath>
+      <FullPath>C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\x64\Debug\ALL_BUILD</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

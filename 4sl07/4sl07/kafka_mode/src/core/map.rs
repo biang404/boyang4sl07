@@ -1,7 +1,11 @@
 use rustc_hash::FxHashMap;
 use std::io::Read;
 
-pub fn map_chunk_from_file(path: &str, offset: u64, chunk_size_bytes: usize) -> std::io::Result<FxHashMap<String, u32>> {
+pub fn map_chunk_from_file(
+    path: &str,
+    offset: u64,
+    chunk_size_bytes: usize,
+) -> std::io::Result<FxHashMap<String, u32>> {
     let mut file = std::fs::File::open(path)?;
     use std::io::Seek;
     use std::io::SeekFrom;

@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\release\build\rdkafka-sys-1e03cfde48ebaaa4\out\build\CMakeFiles\636d98722d5065a7b8e261159c8f1e39\generate.stamp.rule">
+    <CustomBuild Include="C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\release\build\rdkafka-sys-1e03cfde48ebaaa4\out\build\CMakeFiles\69ccb00aaf76697f1f75a88f7a993ad2\generate.stamp.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{EF4A2FF1-CBB9-38E5-ACA2-427190030B14}</UniqueIdentifier>
+      <UniqueIdentifier>{A6037973-6150-3F34-AFEE-1231882CEADC}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

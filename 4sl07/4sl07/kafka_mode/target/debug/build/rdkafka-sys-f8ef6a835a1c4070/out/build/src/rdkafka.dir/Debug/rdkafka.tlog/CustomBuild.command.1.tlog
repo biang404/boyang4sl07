@@ -1,6 +1,6 @@
 ^C:\USERS\22863\.CARGO\REGISTRY\SRC\INDEX.CRATES.IO-1949CF8C6B5B557F\RDKAFKA-SYS-4.10.0+2.12.1\LIBRDKAFKA\SRC\CMAKELISTS.TXT
 setlocal
-"C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/22863/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka -BC:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build --check-stamp-file C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/CMakeFiles/generate.stamp
+"C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/22863/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka -BC:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build --check-stamp-file C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build/src/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

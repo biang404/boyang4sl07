@@ -30,7 +30,7 @@ CMAKE = None
 -- Detecting CXX compile features - done
 -- Looking for pow in m
 -- Looking for pow in m - not found
--- Found ZLIB: C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/libz-sys-a343edecc7da9814/out/lib/z.lib (found version "1.3.2")
+-- Found ZLIB: C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/libz-sys-a343edecc7da9814/out/lib/z.lib (found version "1.3.2")
 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
 -- Looking for pthread_create in pthreads
@@ -38,9 +38,9 @@ CMAKE = None
 -- Looking for pthread_create in pthread
 -- Looking for pthread_create in pthread - not found
 -- Found Threads: TRUE
--- Configuring done (20.6s)
--- Generating done (0.1s)
--- Build files have been written to: C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build
+-- Configuring done (24.6s)
+-- Generating done (0.4s)
+-- Build files have been written to: C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/build
 适用于 .NET Framework MSBuild 版本 18.0.5+e22287bf1
 
   1>Checking Build System
@@ -137,122 +137,122 @@ CMAKE = None
   lz4hc.c
   regexp.c
   正在生成代码...
-  rdkafka.vcxproj -> C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\Debug\rdkafka.lib
+  rdkafka.vcxproj -> C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src\Debug\rdkafka.lib
   Building Custom Rule C:/Users/22863/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/CMakeLists.txt
   ConfImpl.cpp
-C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
-  (compiling source file '../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/ConfImpl.cpp')
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
+  (compiling source file '../../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/ConfImpl.cpp')
       C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9):
       模板实例化上下文(最早的实例化上下文)为
           C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src-cpp\rdkafkacpp_int.h(1308,28):
           查看对正在编译的函数 模板 实例化“std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const char *)”的引用
   
   ConsumerImpl.cpp
-C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
-  (compiling source file '../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/ConsumerImpl.cpp')
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
+  (compiling source file '../../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/ConsumerImpl.cpp')
       C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9):
       模板实例化上下文(最早的实例化上下文)为
           C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src-cpp\rdkafkacpp_int.h(1308,28):
           查看对正在编译的函数 模板 实例化“std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const char *)”的引用
   
   HandleImpl.cpp
-C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
-  (compiling source file '../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/HandleImpl.cpp')
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
+  (compiling source file '../../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/HandleImpl.cpp')
       C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9):
       模板实例化上下文(最早的实例化上下文)为
           C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src-cpp\rdkafkacpp_int.h(1308,28):
           查看对正在编译的函数 模板 实例化“std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const char *)”的引用
   
   HeadersImpl.cpp
-C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
-  (compiling source file '../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/HeadersImpl.cpp')
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
+  (compiling source file '../../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/HeadersImpl.cpp')
       C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9):
       模板实例化上下文(最早的实例化上下文)为
           C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src-cpp\rdkafkacpp_int.h(1308,28):
           查看对正在编译的函数 模板 实例化“std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const char *)”的引用
   
   KafkaConsumerImpl.cpp
-C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
-  (compiling source file '../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/KafkaConsumerImpl.cpp')
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
+  (compiling source file '../../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/KafkaConsumerImpl.cpp')
       C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9):
       模板实例化上下文(最早的实例化上下文)为
           C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src-cpp\rdkafkacpp_int.h(1308,28):
           查看对正在编译的函数 模板 实例化“std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const char *)”的引用
   
   MessageImpl.cpp
-C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
-  (compiling source file '../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/MessageImpl.cpp')
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
+  (compiling source file '../../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/MessageImpl.cpp')
       C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9):
       模板实例化上下文(最早的实例化上下文)为
           C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src-cpp\rdkafkacpp_int.h(1308,28):
           查看对正在编译的函数 模板 实例化“std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const char *)”的引用
   
   MetadataImpl.cpp
-C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
-  (compiling source file '../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/MetadataImpl.cpp')
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
+  (compiling source file '../../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/MetadataImpl.cpp')
       C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9):
       模板实例化上下文(最早的实例化上下文)为
           C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src-cpp\rdkafkacpp_int.h(1308,28):
           查看对正在编译的函数 模板 实例化“std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const char *)”的引用
   
   ProducerImpl.cpp
-C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
-  (compiling source file '../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/ProducerImpl.cpp')
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
+  (compiling source file '../../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/ProducerImpl.cpp')
       C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9):
       模板实例化上下文(最早的实例化上下文)为
           C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src-cpp\rdkafkacpp_int.h(1308,28):
           查看对正在编译的函数 模板 实例化“std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const char *)”的引用
   
   QueueImpl.cpp
-C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
-  (compiling source file '../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/QueueImpl.cpp')
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
+  (compiling source file '../../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/QueueImpl.cpp')
       C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9):
       模板实例化上下文(最早的实例化上下文)为
           C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src-cpp\rdkafkacpp_int.h(1308,28):
           查看对正在编译的函数 模板 实例化“std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const char *)”的引用
   
   RdKafka.cpp
-C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
-  (compiling source file '../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/RdKafka.cpp')
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
+  (compiling source file '../../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/RdKafka.cpp')
       C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9):
       模板实例化上下文(最早的实例化上下文)为
           C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src-cpp\rdkafkacpp_int.h(1308,28):
           查看对正在编译的函数 模板 实例化“std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const char *)”的引用
   
   TopicImpl.cpp
-C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
-  (compiling source file '../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/TopicImpl.cpp')
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
+  (compiling source file '../../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/TopicImpl.cpp')
       C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9):
       模板实例化上下文(最早的实例化上下文)为
           C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src-cpp\rdkafkacpp_int.h(1308,28):
           查看对正在编译的函数 模板 实例化“std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const char *)”的引用
   
   TopicPartitionImpl.cpp
-C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
-  (compiling source file '../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/TopicPartitionImpl.cpp')
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc [C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\rdkafka++.vcxproj]
+  (compiling source file '../../../../../../../../../../../../../../.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/src-cpp/TopicPartitionImpl.cpp')
       C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.50.35717\include\__msvc_ostream.hpp(781,9):
       模板实例化上下文(最早的实例化上下文)为
           C:\Users\22863\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\rdkafka-sys-4.10.0+2.12.1\librdkafka\src-cpp\rdkafkacpp_int.h(1308,28):
           查看对正在编译的函数 模板 实例化“std::basic_ostream<char,std::char_traits<char>> &std::operator <<<std::char_traits<char>>(std::basic_ostream<char,std::char_traits<char>> &,const char *)”的引用
   
   正在生成代码...
-  rdkafka++.vcxproj -> C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\Debug\rdkafka++.lib
+  rdkafka++.vcxproj -> C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out\build\src-cpp\Debug\rdkafka++.lib
   Building Custom Rule C:/Users/22863/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rdkafka-sys-4.10.0+2.12.1/librdkafka/CMakeLists.txt
   1>
   -- Install configuration: "Debug"
-  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/cmake/RdKafka/RdKafkaConfig.cmake
-  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/cmake/RdKafka/RdKafkaConfigVersion.cmake
-  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/cmake/RdKafka/FindLZ4.cmake
-  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/cmake/RdKafka/RdKafkaTargets.cmake
-  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/cmake/RdKafka/RdKafkaTargets-debug.cmake
-  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/share/licenses/librdkafka/LICENSES.txt
-  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/pkgconfig/rdkafka-static.pc
-  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/rdkafka.lib
-  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/include/librdkafka/rdkafka.h
-  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/include/librdkafka/rdkafka_mock.h
-  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/pkgconfig/rdkafka++-static.pc
-  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/rdkafka++.lib
-  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/include/librdkafka/rdkafkacpp.h
-cargo:root=C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out
-cargo:rustc-link-search=native=C:\Users\22863\Desktop\SLR\4SL07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out/lib
+  -- Up-to-date: C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/cmake/RdKafka/RdKafkaConfig.cmake
+  -- Up-to-date: C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/cmake/RdKafka/RdKafkaConfigVersion.cmake
+  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/cmake/RdKafka/FindLZ4.cmake
+  -- Up-to-date: C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/cmake/RdKafka/RdKafkaTargets.cmake
+  -- Up-to-date: C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/cmake/RdKafka/RdKafkaTargets-debug.cmake
+  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/share/licenses/librdkafka/LICENSES.txt
+  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/pkgconfig/rdkafka-static.pc
+  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/rdkafka.lib
+  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/include/librdkafka/rdkafka.h
+  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/include/librdkafka/rdkafka_mock.h
+  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/pkgconfig/rdkafka++-static.pc
+  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/lib/rdkafka++.lib
+  -- Installing: C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out/include/librdkafka/rdkafkacpp.h
+cargo:root=C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out
+cargo:rustc-link-search=native=C:\Users\22863\Desktop\SLR\4SL07\boyang4sl07\4sl07\4sl07\kafka_mode\target\debug\build\rdkafka-sys-f8ef6a835a1c4070\out/lib
 cargo:rustc-link-lib=static=rdkafka

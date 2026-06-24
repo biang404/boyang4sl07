@@ -5,6 +5,7 @@ edition = "2024"
 
 [dependencies]
 anyhow = "1.0.100"
+bincode = "1.3.3"
 clap = { version = "4.6.1", features = ["derive"] }
 futures = "0.3.32"
 rdkafka = { version = "0.37.0", features = ["tokio", "cmake-build"] }

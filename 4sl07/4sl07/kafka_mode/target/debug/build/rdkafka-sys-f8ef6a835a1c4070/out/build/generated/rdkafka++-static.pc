@@ -1,4 +1,4 @@
-prefix=C:/Users/22863/Desktop/SLR/4SL07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out
+prefix=C:/Users/22863/Desktop/SLR/4SL07/boyang4sl07/4sl07/4sl07/kafka_mode/target/debug/build/rdkafka-sys-f8ef6a835a1c4070/out
 exec_prefix=${prefix}
 includedir=${prefix}/include
 libdir=${prefix}/lib

@@ -1,7 +1,13 @@
 use crate::config::{RunConfig, TopicNames};
 use crate::kafka::admin::ensure_topics;
-use crate::kafka::io::{commit_message, create_consumer, create_producer, recv_json, send_json};
-use crate::messages::{MapPartitionMeta, MapTask, ReduceResultMeta, ReduceTaskMeta, TaskAck, TaskPhase, WorkerRegistration};
+use crate::kafka::io::{
+    commit_message, create_consumer, create_producer, recv_binary, recv_json, send_binary,
+    send_json,
+};
+use crate::messages::{
+    MapPartitionPayload, MapTask, ReduceResultPayload, ReduceTaskPayload, TaskAck, TaskPhase,
+    WorkerRegistration,
+};
 use anyhow::Result;
 use rustc_hash::{FxHashMap, FxHashSet};
 use std::path::Path;
@@ -22,13 +28,6 @@ pub async fn run_coordinator(run: RunConfig) -> Result<()> {
     )
     .await?;
 
-    let map_outputs_dir = format!("{}/map_outputs", run.work_dir);
-    let reduce_inputs_dir = format!("{}/reduce_inputs", run.work_dir);
-    let reduce_outputs_dir = format!("{}/reduce_outputs", run.work_dir);
-    fs::create_dir_all(&map_outputs_dir).await.ok();
-    fs::create_dir_all(&reduce_inputs_dir).await.ok();
-    fs::create_dir_all(&reduce_outputs_dir).await.ok();
-
     let producer = create_producer(&run.bootstrap_servers)?;
     let local_host = local_host_fqdn();
 
@@ -46,7 +45,11 @@ pub async fn run_coordinator(run: RunConfig) -> Result<()> {
                 online_workers.insert(reg.worker_id);
             }
             commit_message(&registration_consumer, &msg)?;
-            println!("Registered workers: {}/{}", online_workers.len(), run.workers);
+            println!(
+                "Registered workers: {}/{}",
+                online_workers.len(),
+                run.workers
+            );
         }
     }
 
@@ -69,7 +72,13 @@ pub async fn run_coordinator(run: RunConfig) -> Result<()> {
             version: run.version.clone(),
             coordinator_host: local_host.clone(),
         };
-        send_json(&producer, &topics.map_tasks, &format!("map-{}", map_id), &task).await?;
+        send_json(
+            &producer,
+            &topics.map_tasks,
+            &format!("map-{}", map_id),
+            &task,
+        )
+        .await?;
     }
     println!("Published {} map tasks", computed_maps);
 
@@ -84,50 +93,38 @@ pub async fn run_coordinator(run: RunConfig) -> Result<()> {
         &[topics.task_acks.as_str()],
     )?;
 
-    // In-memory aggregation per reduce partition.
-    // Each map output file is SCP-pushed here by the worker. We read it immediately on receipt,
-    // aggregate into a per-partition HashMap, then DELETE the file. As soon as ALL map outputs
-    // for a partition arrive we dispatch the reduce task. This keeps coordinator disk usage
-    // near-zero throughout the map phase.
-    let mut reduce_accumulators: Vec<FxHashMap<String, u32>> =
-        (0..run.reduce_count).map(|_| FxHashMap::default()).collect();
+    // In-memory aggregation per reduce partition. Map partitions are compact bincode payloads
+    // carried by Kafka, so there is no SSH/SCP transfer in the shuffle path.
+    let mut reduce_accumulators: Vec<FxHashMap<String, u32>> = (0..run.reduce_count)
+        .map(|_| FxHashMap::default())
+        .collect();
     let mut map_counts: Vec<usize> = vec![0usize; run.reduce_count];
     let mut reduce_dispatched: Vec<bool> = vec![false; run.reduce_count];
     let mut map_done: FxHashSet<usize> = FxHashSet::default();
 
     while map_done.len() < computed_maps {
         tokio::select! {
-            res = recv_json::<MapPartitionMeta>(&map_results_consumer) => {
-                if let Some((meta, msg)) = res? {
-                    if meta.job_id == run.job_id && meta.reduce_id < run.reduce_count {
-                        match fs::read_to_string(&meta.file_path).await {
-                            Ok(content) => {
-                                if let Ok(entries) = serde_json::from_str::<Vec<(String, u32)>>(&content) {
-                                    let acc = &mut reduce_accumulators[meta.reduce_id];
-                                    for (k, v) in entries {
-                                        *acc.entry(k).or_insert(0) += v;
-                                    }
-                                }
-                                fs::remove_file(&meta.file_path).await.ok();
-                                map_counts[meta.reduce_id] += 1;
-                                if map_counts[meta.reduce_id] == computed_maps
-                                    && !reduce_dispatched[meta.reduce_id]
-                                {
-                                    reduce_dispatched[meta.reduce_id] = true;
-                                    dispatch_reduce_task(
-                                        meta.reduce_id,
-                                        &reduce_accumulators[meta.reduce_id],
-                                        &producer,
-                                        &topics,
-                                        &run,
-                                        &local_host,
-                                    ).await?;
-                                }
-                            }
-                            Err(e) => {
-                                eprintln!("Failed to read map output {}: {}", meta.file_path, e);
-                            }
+            res = recv_binary::<MapPartitionPayload>(&map_results_consumer) => {
+                if let Some((payload, msg)) = res? {
+                    if payload.job_id == run.job_id && payload.reduce_id < run.reduce_count {
+                        let reduce_id = payload.reduce_id;
+                        let acc = &mut reduce_accumulators[reduce_id];
+                        for (k, v) in payload.entries {
+                            *acc.entry(k).or_insert(0) += v;
                         }
+                        map_counts[reduce_id] += 1;
+                        if map_counts[reduce_id] == computed_maps
+                            && !reduce_dispatched[reduce_id]
+                        {
+                            reduce_dispatched[reduce_id] = true;
+                            dispatch_reduce_task(
+                                reduce_id,
+                                &reduce_accumulators[reduce_id],
+                                &producer,
+                                &topics,
+                                &run,
+                            ).await?;
+                            }
                     }
                     commit_message(&map_results_consumer, &msg)?;
                 }
@@ -157,13 +154,10 @@ pub async fn run_coordinator(run: RunConfig) -> Result<()> {
 
     while final_results.len() < run.reduce_count {
         tokio::select! {
-            res = recv_json::<ReduceResultMeta>(&reduce_results_consumer) => {
-                if let Some((meta, msg)) = res? {
-                    if meta.job_id == run.job_id {
-                        let content = fs::read_to_string(&meta.file_path).await?;
-                        let entries: Vec<(String, u32)> = serde_json::from_str(&content)?;
-                        final_results.insert(meta.reduce_id, entries);
-                        fs::remove_file(&meta.file_path).await.ok();
+            res = recv_binary::<ReduceResultPayload>(&reduce_results_consumer) => {
+                if let Some((payload, msg)) = res? {
+                    if payload.job_id == run.job_id {
+                        final_results.insert(payload.reduce_id, payload.entries);
                         println!("Reduce result received: {}/{}", final_results.len(), run.reduce_count);
                     }
                     commit_message(&reduce_results_consumer, &msg)?;
@@ -182,7 +176,6 @@ pub async fn run_coordinator(run: RunConfig) -> Result<()> {
     }
 
     write_results(&run.result_dir, &run.job_id, final_results).await?;
-    fs::remove_dir_all(reduce_outputs_dir).await.ok();
     println!("Job {} completed", run.job_id);
     Ok(())
 }
@@ -193,21 +186,26 @@ async fn dispatch_reduce_task(
     producer: &rdkafka::producer::FutureProducer,
     topics: &TopicNames,
     run: &RunConfig,
-    local_host: &str,
 ) -> Result<()> {
     let entries: Vec<(String, u32)> = accumulator.iter().map(|(k, v)| (k.clone(), *v)).collect();
-    let reduce_input_path = format!("{}/reduce_inputs/reduce_{}.json", run.work_dir, reduce_id);
-    fs::write(&reduce_input_path, serde_json::to_string(&entries)?).await?;
-    let meta = ReduceTaskMeta {
+    let payload = ReduceTaskPayload {
         job_id: run.job_id.clone(),
         reduce_id,
-        file_host: local_host.to_string(),
-        file_path: reduce_input_path,
         entry_count: entries.len(),
         version: run.version.clone(),
+        entries,
     };
-    send_json(producer, &topics.reduce_tasks, &format!("reduce-{}", reduce_id), &meta).await?;
-    println!("Dispatched reduce task {} ({} unique entries)", reduce_id, entries.len());
+    send_binary(
+        producer,
+        &topics.reduce_tasks,
+        &format!("reduce-{}", reduce_id),
+        &payload,
+    )
+    .await?;
+    println!(
+        "Dispatched reduce task {} ({} unique entries)",
+        reduce_id, payload.entry_count
+    );
     Ok(())
 }
 
