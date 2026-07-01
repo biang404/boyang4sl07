@@ -1,0 +1,2 @@
+total_duration_seconds,map_tasks,map_avg_seconds,map_median_seconds,map_max_seconds,map_min_seconds,reduce_tasks,reduce_avg_seconds,reduce_median_seconds,reduce_max_seconds,reduce_min_seconds
+439.952,200,29.834795,27.502,50.569,12.051,40,3.6439,3.442,5.833,3.124

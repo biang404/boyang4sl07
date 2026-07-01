@@ -1,5 +1,5 @@
 use crate::config::{RunConfig, TopicNames};
-use crate::core::map::{map_file, partition_map};
+use crate::core::map::{map_bytes, partition_map, read_file_bytes};
 use crate::core::reduce::{map_to_sorted_vec, reduce_entries};
 use crate::kafka::io::{
     BinaryChunkCollector, commit_message, create_consumer, create_producer, recv_binary, recv_json,
@@ -78,8 +78,19 @@ async fn handle_map_task(
     task: MapTask,
 ) -> Result<()> {
     let map_start_time = now_ms();
+    let download_start_time = now_ms();
     let downloaded_input = prepare_input_file(&task)?;
-    let result = handle_prepared_map_task(producer, topics, worker_id, &task, map_start_time).await;
+    let download_end_time = now_ms();
+    let result = handle_prepared_map_task(
+        producer,
+        topics,
+        worker_id,
+        &task,
+        map_start_time,
+        download_start_time,
+        download_end_time,
+    )
+    .await;
     if downloaded_input {
         remove_input_file(&task.input_file);
     }
@@ -92,13 +103,19 @@ async fn handle_prepared_map_task(
     worker_id: &str,
     task: &MapTask,
     map_start_time: u64,
+    download_start_time: u64,
+    download_end_time: u64,
 ) -> Result<()> {
     let input_bytes = std::fs::metadata(&task.input_file)?.len();
     let input_read_start_time = now_ms();
-    let mapped = map_file(&task.input_file)?;
+    let buf = read_file_bytes(&task.input_file)?;
     let input_read_end_time = now_ms();
+    let map_process_start_time = now_ms();
+    let mapped = map_bytes(buf)?;
     let mut partitions = partition_map(mapped, task.reduce_count);
+    let map_process_end_time = now_ms();
 
+    let temp_save_start_time = now_ms();
     for (reduce_id, entries) in partitions.drain(..).enumerate() {
         let entry_count = entries.len();
         let payload = MapPartitionPayload {
@@ -137,6 +154,7 @@ async fn handle_prepared_map_task(
             "transport": "kafka_bincode",
         }));
     }
+    let temp_save_end_time = now_ms();
 
     send_json(
         producer,
@@ -158,11 +176,20 @@ async fn handle_prepared_map_task(
         "map_task_id": task.map_id,
         "worker_id": worker_id,
         "map_start_time": map_start_time,
+        "download_start_time": download_start_time,
+        "download_end_time": download_end_time,
         "input_read_start_time": input_read_start_time,
         "input_read_end_time": input_read_end_time,
+        "map_process_start_time": map_process_start_time,
+        "map_process_end_time": map_process_end_time,
+        "temp_save_start_time": temp_save_start_time,
+        "temp_save_end_time": temp_save_end_time,
         "input_bytes": input_bytes,
         "map_done_time": map_done_time,
+        "download_duration_ms": download_end_time.saturating_sub(download_start_time),
         "input_read_duration_ms": input_read_end_time.saturating_sub(input_read_start_time),
+        "map_process_duration_ms": map_process_end_time.saturating_sub(map_process_start_time),
+        "temp_save_duration_ms": temp_save_end_time.saturating_sub(temp_save_start_time),
         "map_task_duration_ms": map_done_time.saturating_sub(map_start_time),
     }));
 
@@ -296,6 +323,8 @@ async fn handle_reduce_task(
         "reduce_done_time": reduce_done_time,
         "sort_duration_ms": sort_end_time.saturating_sub(sort_start_time),
         "output_write_duration_ms": output_write_end_time.saturating_sub(output_write_start_time),
+        "reduce_process_duration_ms": output_write_start_time.saturating_sub(reduce_merge_start_time),
+        "file_transfer_duration_ms": output_write_end_time.saturating_sub(output_write_start_time),
         "reduce_task_duration_ms": reduce_done_time.saturating_sub(reduce_start_time),
     }));
 

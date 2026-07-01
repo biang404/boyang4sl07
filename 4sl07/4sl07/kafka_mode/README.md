@@ -139,3 +139,39 @@ cargo run --release -- cleaner \
 - Current map implementation uses chunk tokenization in memory.
 - Current reduce implementation merges `(word, count)` entries in memory.
 - Additional version-specific map/reduce parity can be added incrementally on top of this structure.
+
+## Scaling experiments and graphs
+
+Collect timing data for several worker counts and draw the three scaling graphs
+(total time, MAP phase breakdown, REDUCE phase breakdown).
+
+For each worker count in `5 10 15 25 35 50`:
+
+```bash
+# 1. deploy + run with that worker count and wait until it finishes
+bash deploy.sh <ssh_user> 5 <wet_files> <reduce_count>
+bash status.sh          # wait until you see the job_done metric
+
+# 2. collect this run's metrics into experiments/05_workers/
+bash collect_experiment.sh 5
+
+# 3. clean up before the next worker count
+bash cleanup.sh
+```
+
+Repeat for `10`, `15`, `25`, `35`, `50` (the collector zero-pads to `NN_workers`).
+
+When all runs are collected, draw the graphs:
+
+```bash
+python3 scripts/plot_experiments.py
+```
+
+Outputs (in `experiments/graphs/`):
+- `01_total_execution_time.png` — total job time vs worker count.
+- `02_map_phase_breakdown.png` — avg MAP time split into Download / Reading / Processing (Mapping) / Temp Saving.
+- `03_reduce_phase_breakdown.png` — avg REDUCE time split into File Transfer / Processing (Reduce).
+
+Sub-step timings are emitted by the worker as `map_task` / `reduce_task` metrics and
+aggregated per run into `phase_breakdown.csv` by `scripts/export_metrics.py`.
+

@@ -1,14 +1,16 @@
 use rustc_hash::FxHashMap;
 use std::io::Read;
 
-pub fn map_file(path: &str) -> std::io::Result<FxHashMap<String, u32>> {
+/// Read the whole input file into memory. Kept separate from `map_bytes` so the
+/// worker can time the disk-read step independently from the tokenization step.
+pub fn read_file_bytes(path: &str) -> std::io::Result<Vec<u8>> {
     let mut file = std::fs::File::open(path)?;
     let mut buf = Vec::new();
     file.read_to_end(&mut buf)?;
-    map_bytes(buf)
+    Ok(buf)
 }
 
-fn map_bytes(mut buf: Vec<u8>) -> std::io::Result<FxHashMap<String, u32>> {
+pub fn map_bytes(mut buf: Vec<u8>) -> std::io::Result<FxHashMap<String, u32>> {
     let mut text = String::from_utf8_lossy(&buf).to_string();
     text.make_ascii_lowercase();
 
